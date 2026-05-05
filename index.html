@@ -10,7 +10,7 @@
 
     <style>
         :root {
-            --blue: #173E7E;
+            --oizt-blue: #173E7E;
             --amber: #E45E41;
             --text: #333333;
             --bg: #F2F4F7;
@@ -18,6 +18,7 @@
             --secondary: #747DAD;
             --dark-navy: #0B1F40;
             --sand: #FAD9D2;
+            --amber-light: #C4826D;
         }
 
         * {
@@ -45,15 +46,17 @@
 
         .reveal h1 {
             font-size: 2.6em;
+            color: var(--amber);
         }
 
         .reveal h2 {
             font-size: 2em;
+            color: var(--amber-light);
         }
 
         .reveal h3 {
             font-weight: 700;
-            color: var(--blue);
+            color: var(--oizt-blue);
             font-size: 1.4em;
             margin-bottom: 0.3em;
         }
@@ -73,15 +76,15 @@
             width: 100%;
             font-size: 0.9em;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            background: #f5f5f5;
+            background: #F2F4F7;
             padding: 1em;
-            border-left: 4px solid var(--blue);
+            border-left: 4px solid var(--oizt-blue);
         }
 
         .reveal code {
             color: var(--text);
             padding: 2px 6px;
-            background: #f5f5f5;
+            background: #F2F4F7;
             border-radius: 3px;
         }
 
@@ -94,7 +97,7 @@
 
         .progress {
             height: 4px;
-            background: var(--blue);
+            background: var(--oizt-blue);
         }
 
         /* Custom slide backgrounds */
@@ -112,12 +115,12 @@
         }
 
         .slide-bg-light-blue {
-            background-color: #f0f7ff !important;
+            background-color: #E8ECF4 !important;
         }
 
         /* Card and border styles */
         .blue-border-left {
-            border-left: 6px solid var(--blue);
+            border-left: 6px solid var(--oizt-blue);
             padding-left: 1.5em;
         }
 
@@ -125,11 +128,11 @@
             border: 3px solid var(--amber);
             padding: 2em;
             border-radius: 8px;
-            background-color: #fff9f5;
+            background-color: #FAD9D2;
         }
 
         .blue-border-frame {
-            border: 3px solid var(--blue);
+            border: 3px solid var(--oizt-blue);
             padding: 2em;
             border-radius: 8px;
             background-color: var(--light-blue);
@@ -173,7 +176,7 @@
 
         .card-title {
             font-weight: 700;
-            color: var(--blue);
+            color: var(--oizt-blue);
             font-size: 1.1em;
             margin-bottom: 0.5em;
             text-transform: uppercase;
@@ -182,7 +185,7 @@
 
         .card-subtitle {
             font-size: 0.95em;
-            color: #666;
+            color: var(--secondary);
             margin-top: 0.5em;
         }
 
@@ -202,8 +205,8 @@
         }
 
         .prompt-box {
-            background: #f5f5f5;
-            border: 2px solid var(--blue);
+            background: #F2F4F7;
+            border: 2px solid var(--oizt-blue);
             padding: 1.2em;
             border-radius: 6px;
             font-family: 'Courier New', monospace;
@@ -215,7 +218,7 @@
 
         .caption {
             font-size: 0.95em;
-            color: #666;
+            color: var(--secondary);
             font-style: italic;
             margin-top: 1em;
         }
@@ -223,11 +226,11 @@
         .section-badge {
             display: inline-block;
             background: var(--light-blue);
-            border: 2px solid var(--blue);
+            border: 2px solid var(--oizt-blue);
             padding: 0.5em 1em;
             border-radius: 20px;
             font-weight: 700;
-            color: var(--blue);
+            color: var(--oizt-blue);
             font-size: 0.85em;
             margin-bottom: 1em;
         }
@@ -235,7 +238,7 @@
         .impact-number {
             font-size: 5em;
             font-weight: 900;
-            color: var(--blue);
+            color: var(--oizt-blue);
             line-height: 1.1;
         }
 
@@ -325,7 +328,7 @@
 
         /* Reveal.js overrides */
         .reveal .controls {
-            color: var(--blue);
+            color: var(--oizt-blue);
         }
     </style>
 </head>
@@ -347,7 +350,7 @@
                 <!-- Tekst — centiran u preostalom prostoru -->
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center;">
                     <h1>AI za ne-tehničare</h1>
-                    <h2 style="color: var(--blue); font-weight: 700;">Od chatbota do AI agenata</h2>
+                    <h2 style="color: var(--oizt-blue); font-weight: 700;">Od chatbota do AI agenata</h2>
                     <p style="margin-top: 2em; font-size: 1.1em;">Ekonomsko-birotehnička i trgovačka škola Zadar, 6. svibnja 2026.</p>
                     <p style="font-size: 1em; color: #666; margin-top: 2em; line-height: 1.8;">
                         Izv. prof. dr. sc. Franjo Pehar &nbsp;|&nbsp; dr. sc. Nikolina Peša Pavlović<br>
@@ -376,9 +379,10 @@
             <!-- SLIDE 3: Interactive moment #1 -->
             <section class="slide-bg-light-blue">
                 <div class="amber-border-frame">
-                    <h2 style="color: var(--blue); margin-bottom: 1.5em;">⏸️ Pitanje za sve prisutne </h2>
+                    <h2 style="color: var(--oizt-blue); margin-bottom: 1.5em;">⏸️ Pitanje za sve prisutne </h2>
                     <div style="text-align: left; font-size: 1.3em; line-height: 2;">
-                        <p>1. Tko je koristio AI ovaj tjedan? 🙋 > za a. školu, b. posao, c. iz znatiželje?</p>
+                        <p>1. Tko je koristio AI ovaj tjedan? 🙋</p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;a. školu, b. posao, c. iz znatiželje?
                         <p style="margin-top: 0.8em;">2. Danas? 🙋</p>
                         <p style="margin-top: 0.8em;">3. A u zadnjih sat vremena?🙋</p>
                     </div>
@@ -390,53 +394,76 @@
 
             <!-- ===== SECTION 2: ŠTO JE AI [3–10 min] ===== -->
 
-            <!-- SLIDE 4: How AI works -->
+            <!-- SLIDE 4: How AI works + simulacije (↓) -->
             <section>
-                <h2>Kako AI zapravo funkcionira</h2>
-                <p style="color: var(--blue); font-size: 1.1em; margin-bottom: 1.5em;">Nije magija, već čista <b>statistika</b></p>
-                <svg viewBox="0 0 900 200" style="width: 100%; height: auto; margin: 1em auto; display: block;">
-                    <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                            <polygon points="0 0, 10 3, 0 6" fill="#1a6bff"/>
-                        </marker>
-                    </defs>
+                <section>
+                    <h2>Kako AI zapravo funkcionira</h2>
+                    <p style="color: var(--oizt-blue); font-size: 1.1em; margin-bottom: 1.5em;">Nije magija, već čista <b>statistika</b></p>
+                    <svg viewBox="0 0 900 200" style="width: 100%; height: auto; margin: 1em auto; display: block;">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#173E7E"/>
+                            </marker>
+                        </defs>
 
-                    <!-- Arrows -->
-                    <path d="M 170 90 L 210 90" stroke="#1a6bff" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-                    <path d="M 380 90 L 420 90" stroke="#1a6bff" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-                    <path d="M 590 90 L 630 90" stroke="#1a6bff" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        <!-- Arrows -->
+                        <path d="M 170 90 L 210 90" stroke="#173E7E" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 380 90 L 420 90" stroke="#173E7E" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 590 90 L 630 90" stroke="#173E7E" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
 
-                    <!-- Box 1: Ulaz -->
-                    <rect x="20" y="50" width="150" height="80" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="95" y="91" text-anchor="middle" font-size="20" font-weight="700" fill="#1a6bff">Ulaz</text>
-                    <text x="95" y="115" text-anchor="middle" font-size="16" fill="#555">(npr. tekst)</text>
+                        <!-- Box 1: Ulaz -->
+                        <rect x="20" y="50" width="150" height="80" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                        <text x="95" y="91" text-anchor="middle" font-size="20" font-weight="700" fill="#173E7E">Ulaz</text>
+                        <text x="95" y="115" text-anchor="middle" font-size="16" fill="#555">(npr. tekst)</text>
 
-                    <!-- Box 2: Tokenizacija -->
-                    <rect x="220" y="50" width="160" height="80" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="300" y="87" text-anchor="middle" font-size="20" font-weight="700" fill="#1a6bff">Tokenizacija</text>
-                    <text x="300" y="112" text-anchor="middle" font-size="14" fill="#555">(pretvaranje u brojeve)</text>
+                        <!-- Box 2: Tokenizacija -->
+                        <rect x="220" y="50" width="160" height="80" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                        <text x="300" y="87" text-anchor="middle" font-size="20" font-weight="700" fill="#173E7E">Tokenizacija</text>
+                        <text x="300" y="112" text-anchor="middle" font-size="14" fill="#555">(pretvaranje u brojeve)</text>
 
-                    <!-- Box 3: Predviđanje -->
-                    <rect x="430" y="50" width="160" height="80" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="510" y="86" text-anchor="middle" font-size="20" font-weight="700" fill="#1a6bff">Predviđanje</text>
-                    <text x="510" y="110" text-anchor="middle" font-size="16" fill="#555">(sljedeće riječi)</text>
+                        <!-- Box 3: Predviđanje -->
+                        <rect x="430" y="50" width="160" height="80" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                        <text x="510" y="86" text-anchor="middle" font-size="20" font-weight="700" fill="#173E7E">Predviđanje</text>
+                        <text x="510" y="110" text-anchor="middle" font-size="16" fill="#555">(sljedeće riječi)</text>
 
-                    <!-- Box 4: Izlaz -->
-                    <rect x="640" y="50" width="150" height="80" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="715" y="87" text-anchor="middle" font-size="20" font-weight="700" fill="#1a6bff">Izlaz</text>
-                    <text x="715" y="112" text-anchor="middle" font-size="16" fill="#555">(rezultati)</text>
+                        <!-- Box 4: Izlaz -->
+                        <rect x="640" y="50" width="150" height="80" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                        <text x="715" y="87" text-anchor="middle" font-size="20" font-weight="700" fill="#173E7E">Izlaz</text>
+                        <text x="715" y="112" text-anchor="middle" font-size="16" fill="#555">(rezultati)</text>
 
-                    <!-- Label -->
-                    <text x="450" y="175" text-anchor="middle" font-size="17" fill="#1a6bff" font-weight="600">↑ Izvor podataka: bilijarda tokena s weba</text>
-                </svg>
+                        <!-- Label -->
+                        <text x="450" y="175" text-anchor="middle" font-size="17" fill="#173E7E" font-weight="600">↑ Izvor podataka: bilijarda tokena s weba</text>
+                    </svg>
 
-                <p style="text-align: center; font-size: 1em; color: #666; font-style: italic;">
-                    AI ne razumije već <b>predviđa</b>. Kao <i>autocomplete</i> na steroidima.
-                </p>
+                    <p style="text-align: center; font-size: 1em; color: #666; font-style: italic;">
+                        AI ne razumije već <b>predviđa</b>. Kao <i>autocomplete</i> na steroidima.
+                    </p>
 
-                <aside class="notes">
-                    ~4 min. Key point: AI is probability machine, not understanding machine. Use autocomplete on phone as analogy — everyone knows that feeling when phone suggests wrong word. Let that sink in.
-                </aside>
+                    <aside class="notes">
+                        ~4 min. Key point: AI is probability machine, not understanding machine. Use autocomplete on phone as analogy — everyone knows that feeling when phone suggests wrong word. Let that sink in. Pritisni ↓ za tri simulacije algoritama (TikTok / Instagram / Netflix) — opcionalno ako ima vremena.
+                    </aside>
+                </section>
+
+                <!-- Simulacija 1: TikTok algoritam — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_01_tiktok.html" data-background-interactive>
+                    <aside class="notes">
+                        ~5 min (opcionalno). Pitaj: "Tko koristi TikTok? Jeste li znali da iza svakog videa stoji AI koji predviđa što ćete gledati dulje?" Ovo je isti mehanizam kao na prethodnom slajdu — predviđanje na temelju tvojih obrazaca. Pritisni ↓ za Instagram.
+                    </aside>
+                </section>
+
+                <!-- Simulacija 2: Instagram algoritam — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_02_instagram.html" data-background-interactive>
+                    <aside class="notes">
+                        ~6 min (opcionalno). Isti princip, drugačiji kontekst. Instagram boduje svaki post prema tvojim prethodnim interakcijama — sviđanja, komentari, zadržavanje. Pritisni ↓ za Netflix.
+                    </aside>
+                </section>
+
+                <!-- Simulacija 3: Netflix preporuke — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_03_netflix.html" data-background-interactive>
+                    <aside class="notes">
+                        ~7 min (opcionalno). Netflix tvrdi da 80% sadržaja koji se gleda dolazi kroz preporuke, ne kroz vlastitu pretragu. AI ti filtrira stvarnost — što vidiš, ovisi o tome što si gledao/la. → nastavi na sljedeći tematski blok.
+                    </aside>
+                </section>
             </section>
 
             <!-- novi slide Radna memorija (Context Window) -->
@@ -444,8 +471,8 @@
                 <h2>Radna memorija (tzv. context window)</h2>
                 <p style="margin-bottom: 1.2em;">AI modeli ne pamte sve zauvijek. Oni imaju "prozor" kroz koji prate tvoj trenutačni razgovor.</p>
                 <div class="two-column" style="margin-top: 0.5em;">
-                    <div class="card" style="border-color: var(--blue); background: var(--light-blue); text-align: left;">
-                        <p style="font-weight: 700; color: var(--blue); margin-top: 0;">Što to znači?</p>
+                    <div class="card" style="border-color: var(--oizt-blue); background: var(--light-blue); text-align: left;">
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin-top: 0;">Što to znači?</p>
                         <p>Ako je chat predug, AI "zaboravlja" tvoje početne upute i može postati neprecizan.</p>
                     </div>
                     <div class="card" style="border-color: #388e3c; background: #f5fff5; text-align: left;">
@@ -500,7 +527,7 @@
             <!-- SLIDE 6: Teacher moment #1 -->
             <section class="slide-bg-light-blue">
                 <div class="blue-border-frame">
-                    <h2 style="color: var(--blue); margin-bottom: 1.5em;">🎓 Poruka za nastavnike</h2>
+                    <h2 style="color: var(--oizt-blue); margin-bottom: 1.5em;">🎓 Poruka za nastavnike</h2>
                     <p style="font-size: 1.4em; font-weight: 700; line-height: 1.8; margin: 1.5em 0;">
                         "AI je statistička papiga bez potrebnog razumijevanje. Vi razumijete problematiku."
                     </p>
@@ -527,33 +554,39 @@
                     <line x1="80" y1="90" x2="940" y2="90" stroke="#bbb" stroke-width="3"/>
 
                     <!-- Era 1: Kalkulator -->
-                    <circle cx="130" cy="90" r="18" fill="#1a6bff" stroke="white" stroke-width="3"/>
-                    <text x="130" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#1a6bff">1990–2005</text>
-                    <text x="130" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#111">Kalkulator</text>
+                    <circle cx="130" cy="90" r="18" fill="#173E7E" stroke="white" stroke-width="3"/>
+                    <text x="130" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#173E7E">1990–2005</text>
+                    <text x="130" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#333">Kalkulator</text>
                     <text x="130" y="170" text-anchor="middle" font-size="15" fill="#666">Excel, baze podataka</text>
 
                     <!-- Era 2: Tražilica -->
-                    <circle cx="380" cy="90" r="18" fill="#1a6bff" stroke="white" stroke-width="3"/>
-                    <text x="380" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#1a6bff">2000–2015</text>
-                    <text x="380" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#111">Tražilice</text>
+                    <circle cx="380" cy="90" r="18" fill="#173E7E" stroke="white" stroke-width="3"/>
+                    <text x="380" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#173E7E">2000–2015</text>
+                    <text x="380" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#333">Tražilice</text>
                     <text x="380" y="170" text-anchor="middle" font-size="15" fill="#666">npr. Google</text>
 
                     <!-- Era 3: Chatbot -->
-                    <circle cx="630" cy="90" r="18" fill="#1a6bff" stroke="white" stroke-width="3"/>
-                    <text x="630" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#1a6bff">2015–2022</text>
-                    <text x="630" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#111">Chatbot</text>
-                    <text x="630" y="170" text-anchor="middle" font-size="15" fill="#666">Digitalni sugovornik: npr. Siri, Alexa, ChatGPT</text>
+                    <circle cx="630" cy="90" r="18" fill="#173E7E" stroke="white" stroke-width="3"/>
+                    <text x="630" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#173E7E">2015–2022</text>
+                    <text x="630" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#333">Chatbot</text>
+                    <text text-anchor="middle" font-size="14" fill="#666">
+                        <tspan x="630" dy="25">Digitalni sugovornik:</tspan>
+                        <tspan x="630" dy="18">npr. Siri, Alexa, ChatGPT</tspan>
+                    </text>
 
                     <!-- Era 4: AI Agent (highlighted) -->
-                    <circle cx="880" cy="90" r="22" fill="#1a6bff" stroke="#0040cc" stroke-width="4"/>
-                    <text x="880" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#1a6bff">2022–danas</text>
-                    <text x="880" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#111">AI Agent</text>
-                    <text x="880" y="170" text-anchor="middle" font-size="15" fill="#666">Digitalni suradnik: npr. ChatGPT-4, Claude</text>
+                    <circle cx="880" cy="90" r="22" fill="#173E7E" stroke="#0B1F40" stroke-width="4"/>
+                    <text x="880" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#173E7E">2022–danas</text>
+                    <text x="880" y="145" text-anchor="middle" font-size="20" font-weight="800" fill="#333">AI Agent</text>
+                    <text text-anchor="middle" font-size="14" fill="#666">
+                        <tspan x="880" dy="25">Digitalni suradnik:</tspan>
+                        <tspan x="880" dy="18">npr. ChatGPT-4, Claude</tspan>
+                    </text>
 
                     <!-- "MI SMO OVDJE" badge -->
-                    <rect x="790" y="205" width="180" height="38" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="880" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#1a6bff">📍 MI SMO OVDJE</text>
-                    <line x1="880" y1="112" x2="880" y2="203" stroke="#1a6bff" stroke-width="2" stroke-dasharray="5,4"/>
+                    <rect x="790" y="205" width="180" height="38" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                    <text x="880" y="229" text-anchor="middle" font-size="16" font-weight="700" fill="#173E7E">📍 MI SMO OVDJE</text>
+                    <line x1="880" y1="112" x2="880" y2="203" stroke="#173E7E" stroke-width="2" stroke-dasharray="5,4"/>
                 </svg>
 
                 <aside class="notes">
@@ -561,35 +594,44 @@
                 </aside>
             </section>
 
-            <!-- SLIDE 8: Chatbot vs Agent -->
+            <!-- SLIDE 8: Chatbot vs Agent + simulacija (↓) -->
             <section>
-                <h2>Što razlikuje AI agenta od chatbota?</h2>
+                <section>
+                    <h2>Što razlikuje AI agenta od chatbota?</h2>
 
-                <div class="two-column" style="margin-top: 2em;">
-                    <div class="card">
-                        <h3 style="color: #111; font-size: 1.3em; margin-top: 0;">💬 Chatbot</h3>
-                        <p style="margin-top: 1.2em; font-weight: 700;">Pitanje → Odgovor</p>
-                        <ul style="font-size: 0.95em; text-align: left; margin-top: 1em;">
-                            <li>Pamti samo trenutni razgovor</li>
-                            <li>Nema dodatnih alata i vještina</li>
-                            <li>Čeka tvoj sljedeći upit</li>
-                        </ul>
-                    </div>
+                    <div class="two-column" style="margin-top: 2em;">
+                        <div class="card">
+                            <h3 style="color: #333; font-size: 1.3em; margin-top: 0;">💬 Chatbot</h3>
+                            <p style="margin-top: 1.2em; font-weight: 700;">Pitanje → Odgovor</p>
+                            <ul style="font-size: 0.95em; text-align: left; margin-top: 1em;">
+                                <li>Pamti samo trenutni razgovor</li>
+                                <li>Nema dodatnih alata i vještina</li>
+                                <li>Čeka tvoj sljedeći upit</li>
+                            </ul>
+                        </div>
 
-                    <div class="card" style="border-color: var(--blue); background: var(--light-blue);">
-                        <h3 style="font-size: 1.3em; margin-top: 0;">🤖 AI Agent</h3>
-                        <div style="margin-top: 1.2em; text-align: left; font-size: 0.95em; line-height: 2;">
-                            🧠 <strong>Pamćenje</strong> (dugoročno + kratkoročno)<br>
-                            🔧 <strong>Alati</strong> (pretraživanje, kod, datoteke, uloge, vještine, ...)<br>
-                            📋 <strong>Planiranje</strong> (razlaže na korake)<br>
-                            ⚡ <strong>Akcija</strong> (izvršava bez čekanja)
+                        <div class="card" style="border-color: var(--oizt-blue); background: var(--light-blue);">
+                            <h3 style="font-size: 1.3em; margin-top: 0;">🤖 AI Agent</h3>
+                            <div style="margin-top: 1.2em; text-align: left; font-size: 0.95em; line-height: 2;">
+                                🧠 <strong>Pamćenje</strong> (dugoročno + kratkoročno)<br>
+                                🔧 <strong>Alati</strong> (pretraživanje, kod, datoteke, uloge, vještine, ...)<br>
+                                📋 <strong>Planiranje</strong> (razlaže na korake)<br>
+                                ⚡ <strong>Akcija</strong> (izvršava bez čekanja)
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <aside class="notes">
-                    ~12 min. Key distinction: agent doesn't just answer, it ACTS. It has memory beyond the conversation, it can use tools, it breaks big goals into sub-tasks. Paint the picture.
-                </aside>
+                    <aside class="notes">
+                        ~12 min. Key distinction: agent doesn't just answer, it ACTS. It has memory beyond the conversation, it can use tools, it breaks big goals into sub-tasks. Paint the picture. Pritisni ↓ za simulaciju chatbota u web shopa — dobar kontrast s agentom.
+                    </aside>
+                </section>
+
+                <!-- Simulacija 4: Web shop chatbot — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_04_chatbot.html" data-background-interactive>
+                    <aside class="notes">
+                        ~13 min (opcionalno). Pokaži chatbot u akciji: odgovara na pitanja, ali čeka sljedeći upit i nema memoriju van razgovora. Usporedi s agentom koji bi automatski provjerio zalihe, poslao potvrdu i evidentirao narudžbu bez čekanja. → preskoči za nastavak.
+                    </aside>
+                </section>
             </section>
 
             <!-- novi slide Deep Research (Dubinsko istraživanje) -->
@@ -601,8 +643,8 @@
                         <p style="font-weight: 700; color: #555; margin-top: 0;">💬 Običan chat</p>
                         <p>Odgovara na temelju vjerojatnosti onoga na čemu je treniran. Brz, ali može halucinirati i u pravilu se ne poziva na izvore.</p>
                     </div>
-                    <div class="card" style="border-color: var(--blue); background: var(--light-blue); text-align: left;">
-                        <p style="font-weight: 700; color: var(--blue); margin-top: 0;">🔍 Deep Research Agent</p>
+                    <div class="card" style="border-color: var(--oizt-blue); background: var(--light-blue); text-align: left;">
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin-top: 0;">🔍 Deep Research Agent</p>
                         <p>Autonomno pretražuje desetke izvora i piše strukturirani izvještaj <strong>s citatima</strong>. Proces može trajati od nekoliko minuta do gotovo sat vremena.</p>
                     </div>
                 </div>
@@ -617,22 +659,22 @@
                 <div class="section-badge">🏖️ SCENARIJ 1</div>
                 <h2>Agent za najam turističkih apartmana u Zadru</h2>
 
-                <div style="margin: 0.8em auto; max-width: 820px; background: #f5f5f5; padding: 1em 1.5em; border-radius: 8px;">
+                <div style="margin: 0.8em auto; max-width: 820px; background: #F2F4F7; padding: 1em 1.5em; border-radius: 8px;">
                     <p style="text-align: center; font-weight: 700; font-size: 1em; margin-bottom: 0.6em;">
                         "Je li apartman slobodan 15–22 kolovoza 2027.?"
                     </p>
 
                     <div style="text-align: center; font-size: 0.9em; line-height: 1.5;">
-                        <span style="color: var(--blue);">↓</span><br>
+                        <span style="color: var(--oizt-blue);">↓</span><br>
                         Agent provjerava kalendar rezervacija<br>
-                        <span style="color: var(--blue);">↓</span><br>
+                        <span style="color: var(--oizt-blue);">↓</span><br>
                         Agent gleda pravila određivanja cijene (npr. sezona, trajanje)<br>
-                        <span style="color: var(--blue);">↓</span><br>
+                        <span style="color: var(--oizt-blue);">↓</span><br>
                         Agent sastavlja odgovor na jeziku gosta<br>
-                        <span style="color: var(--blue);">↓</span><br>
+                        <span style="color: var(--oizt-blue);">↓</span><br>
                         Agent šalje ponudu i uputu za plaćanje<br>
-                        <span style="color: var(--blue);">↓</span><br>
-                        <strong style="color: var(--blue);">Vlasnik dobiva obavijest: "Nova rezervacija" ✓</strong>
+                        <span style="color: var(--oizt-blue);">↓</span><br>
+                        <strong style="color: var(--oizt-blue);">Vlasnik dobiva obavijest: "Nova rezervacija" ✓</strong>
                     </div>
                 </div>
 
@@ -648,11 +690,11 @@
                 <div class="section-badge">📚 SCENARIJ 2</div>
                 <h2>Agent za izradu školskog projekta</h2>
 
-                <div class="prompt-box" style="margin: 1.5em auto; border-color: var(--blue);">
+                <div class="prompt-box" style="margin: 1.5em auto; border-color: var(--oizt-blue);">
 Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz poduzetništva.
                 </div>
 
-                <div style="margin: 1.5em auto; max-width: 800px; background: #f5f5f5; padding: 1.5em; border-radius: 8px; font-size: 0.95em;">
+                <div style="margin: 1.5em auto; max-width: 800px; background: #F2F4F7; padding: 1.5em; border-radius: 8px; font-size: 0.95em;">
                     <p>➤ Pretražuje aktualne podatke (TZ Zadar, DZS, Eurostat)</p>
                     <p>➤ Odabire i sažima 5 najrelevantnijih  izvora</p>
                     <p>➤ Predlaže strukturu prezentacije (npr. 7 slajdova)</p>
@@ -671,8 +713,7 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
             <section>
                 <div class="section-badge">📊 SCENARIJ 3</div>
                 <h2>Agent u računovodstvenom servisu</h2>
-
-                <div style="margin: 2em auto; max-width: 800px; background: #f5f5f5; padding: 1.5em; border-radius: 8px; font-size: 0.95em;">
+                <div style="margin: 2em auto; max-width: 800px; background: #F2F4F7; padding: 1.5em; border-radius: 8px; font-size: 0.95em;">
                     <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 2em; align-items: center;">
                         <div style="font-size: 2em; text-align: center;">📄📄📄</div>
                         <div style="text-align: center;">
@@ -683,14 +724,13 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
                     </div>
                 </div>
 
-                <div style="margin: 1.5em auto; max-width: 800px; background: #fff9f5; padding: 1.5em; border-radius: 8px; border-left: 4px solid var(--amber); font-size: 0.95em;">
+                <div style="margin: 1.5em auto; max-width: 800px; background: #FAD9D2; padding: 1.5em; border-radius: 8px; border-left: 4px solid var(--amber); font-size: 0.90em;">
                     <p style="margin: 0.5em 0;">→ Čita skenirane račune (PDF/slika)</p>
                     <p style="margin: 0.5em 0;">→ Kategorizira troškove po vrstama</p>
                     <p style="margin: 0.5em 0;">→ Provjerava PDV pozicije</p>
                     <p style="margin: 0.5em 0;">→ Priprema pregled za klijenta</p>
                     <p style="margin: 0.5em 0;">→ Označava anomalije za provjeru od računovođe</p>
                 </div>
-
                 <p class="caption">Računovođa se bavi složenim slučajevima, a agent odrađuje rutinske zadatke.</p>
 
                 <aside class="notes">
@@ -705,7 +745,7 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
                 <svg viewBox="0 0 700 520" style="height: 540px; width: auto; max-width: 100%; margin: 0.2em auto; display: block;">
                     <defs>
                         <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                            <polygon points="0 0, 10 3, 0 6" fill="#1a6bff"/>
+                            <polygon points="0 0, 10 3, 0 6" fill="#173E7E"/>
                         </marker>
                     </defs>
 
@@ -715,46 +755,46 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
                     <text x="350" y="283" text-anchor="middle" font-size="22" font-weight="800" fill="#333">AGENT</text>
 
                     <!-- Node 1: PERCEPCIJA (top) — cy=70, r=62 -->
-                    <circle cx="350" cy="72" r="62" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5"/>
+                    <circle cx="350" cy="72" r="62" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5"/>
                     <text x="350" y="57" text-anchor="middle" font-size="22">👁️</text>
-                    <text x="350" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#1a6bff">PERCEPCIJA</text>
+                    <text x="350" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#173E7E">PERCEPCIJA</text>
                     <text x="350" y="97" text-anchor="middle" font-size="12" fill="#555">upit / okolina</text>
 
                     <!-- Node 2: PAMĆENJE (right-top) — cx=578, cy=178 -->
-                    <circle cx="578" cy="178" r="62" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5"/>
+                    <circle cx="578" cy="178" r="62" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5"/>
                     <text x="578" y="163" text-anchor="middle" font-size="22">🧠</text>
-                    <text x="578" y="184" text-anchor="middle" font-size="15" font-weight="700" fill="#1a6bff">PAMĆENJE</text>
+                    <text x="578" y="184" text-anchor="middle" font-size="15" font-weight="700" fill="#173E7E">PAMĆENJE</text>
                     <text x="578" y="203" text-anchor="middle" font-size="12" fill="#555">kratko + dugo</text>
 
                     <!-- Node 3: ZAKLJUČIVANJE (right-bottom) — cx=578, cy=358 -->
-                    <circle cx="578" cy="358" r="62" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5"/>
+                    <circle cx="578" cy="358" r="62" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5"/>
                     <text x="578" y="343" text-anchor="middle" font-size="22">💭</text>
-                    <text x="578" y="364" text-anchor="middle" font-size="14" font-weight="700" fill="#1a6bff">ZAKLJUČIVANJE</text>
+                    <text x="578" y="364" text-anchor="middle" font-size="14" font-weight="700" fill="#173E7E">ZAKLJUČIVANJE</text>
                     <text x="578" y="382" text-anchor="middle" font-size="12" fill="#555">planira korak</text>
 
                     <!-- Node 4: AKCIJA (bottom) — cy=458 -->
-                    <circle cx="350" cy="458" r="62" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5"/>
+                    <circle cx="350" cy="458" r="62" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5"/>
                     <text x="350" y="443" text-anchor="middle" font-size="22">⚡</text>
-                    <text x="350" y="464" text-anchor="middle" font-size="15" font-weight="700" fill="#1a6bff">AKCIJA</text>
+                    <text x="350" y="464" text-anchor="middle" font-size="15" font-weight="700" fill="#173E7E">AKCIJA</text>
                     <text x="350" y="483" text-anchor="middle" font-size="12" fill="#555">izvršava zadatak</text>
 
                     <!-- Node 5: POVRATNA INFO (left) — cx=122, cy=265 -->
-                    <circle cx="122" cy="265" r="62" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5"/>
+                    <circle cx="122" cy="265" r="62" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5"/>
                     <text x="122" y="248" text-anchor="middle" font-size="22">🔄</text>
-                    <text x="122" y="270" text-anchor="middle" font-size="14" font-weight="700" fill="#1a6bff">POVRATNA</text>
-                    <text x="122" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#1a6bff">INFORMACIJA</text>
+                    <text x="122" y="270" text-anchor="middle" font-size="14" font-weight="700" fill="#173E7E">POVRATNA</text>
+                    <text x="122" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#173E7E">INFORMACIJA</text>
 
                     <!-- Arrows (edge to edge between nodes) -->
                     <!-- N1 → N2 -->
-                    <path d="M 406 98 Q 492 118 526 150" stroke="#1a6bff" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+                    <path d="M 406 98 Q 492 118 526 150" stroke="#173E7E" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
                     <!-- N2 → N3 -->
-                    <path d="M 578 240 L 578 296" stroke="#1a6bff" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+                    <path d="M 578 240 L 578 296" stroke="#173E7E" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
                     <!-- N3 → N4 -->
-                    <path d="M 524 382 Q 458 428 406 434" stroke="#1a6bff" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+                    <path d="M 524 382 Q 458 428 406 434" stroke="#173E7E" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
                     <!-- N4 → N5 -->
-                    <path d="M 300 416 Q 202 386 170 308" stroke="#1a6bff" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+                    <path d="M 300 416 Q 202 386 170 308" stroke="#173E7E" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
                     <!-- N5 → N1 -->
-                    <path d="M 168 222 Q 232 138 300 104" stroke="#1a6bff" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+                    <path d="M 168 222 Q 232 138 300 104" stroke="#173E7E" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
                 </svg>
 
                 <aside class="notes">
@@ -765,35 +805,35 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
             <!-- SLIDE 13: Current AI tools -->
             <section>
                 <h2>Dostupni alati u 2026.</h2>
-                <p style="color: var(--blue); font-weight: 700; margin-bottom: 0.5em;">Svi dostupni besplatno ili kao ograničena besplatna verzija</p>
+                <p style="color: var(--oizt-blue); font-weight: 700; margin-bottom: 0.5em;">Svi dostupni besplatno ili kao ograničena besplatna verzija</p>
 
                 <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.8em; font-size: 0.85em;">
                     <div class="card" style="padding: 1em; grid-column: 1 / 3;">
-                        <p style="font-weight: 700; color: var(--blue); margin: 0;">ChatGPT</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin: 0;">ChatGPT</p>
                         <p style="font-size: 0.85em; color: #666; margin: 0.3em 0;">OpenAI</p>
                         <p style="font-size: 0.85em; margin: 0;">Pisanje, analiza, slike (DALL·E), glas, datoteke. Free: GPT-4o (ograničeno).</p>
                     </div>
 
                     <div class="card" style="padding: 1em; grid-column: 3 / 5;">
-                        <p style="font-weight: 700; color: var(--blue); margin: 0;">Claude</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin: 0;">Claude</p>
                         <p style="font-size: 0.85em; color: #666; margin: 0.3em 0;">Anthropic</p>
                         <p style="font-size: 0.85em; margin: 0;">Dugi dokumenti, detaljna analiza, programiranje, tekst. Free: Claude 3.5.</p>
                     </div>
 
                     <div class="card" style="padding: 1em; grid-column: 5 / 7;">
-                        <p style="font-weight: 700; color: var(--blue); margin: 0;">Gemini</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin: 0;">Gemini</p>
                         <p style="font-size: 0.85em; color: #666; margin: 0.3em 0;">Google</p>
                         <p style="font-size: 0.85em; margin: 0;">Integracija s Docs/Drive, slike, pretraživanje. Free: Gemini 1.5.</p>
                     </div>
 
                     <div class="card" style="padding: 1em; grid-column: 2 / 4;">
-                        <p style="font-weight: 700; color: var(--blue); margin: 0;">Perplexity</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin: 0;">Perplexity</p>
                         <p style="font-size: 0.85em; color: #666; margin: 0.3em 0;">AI tražilica</p>
                         <p style="font-size: 0.85em; margin: 0;">Integrira izvore. Idealan za istraživanje s referencama i citatima. Besplatna inačica.</p>
                     </div>
 
                     <div class="card" style="padding: 1em; grid-column: 4 / 6;">
-                        <p style="font-weight: 700; color: var(--blue); margin: 0;">Copilot</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin: 0;">Copilot</p>
                         <p style="font-size: 0.85em; color: #666; margin: 0.3em 0;">Microsoft</p>
                         <p style="font-size: 0.85em; margin: 0;">Integriran u OS Windows i Office. Web pretraga. Besplatan u Edge pregledniku.</p>
                     </div>
@@ -819,7 +859,7 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
                         <p>Zna da je AI suradnik. Koristi <strong>iterativni pristup</strong>: popravlja i dopunjuje upute dok ne dobije zadovoljavajući rezultat.</p>
                     </div>
                 </div>
-                <p class="caption" style="margin-top: 1.2em; font-size: 1em; font-style: normal; color: var(--blue); font-weight: 700;">
+                <p class="caption" style="margin-top: 1.2em; font-size: 1em; font-style: normal; color: var(--oizt-blue); font-weight: 700;">
                     Po(r)uka: prvi odgovor je u pravilu radna verzija, a ti si urednik/ica!
                 </p>
                 <aside class="notes">
@@ -837,7 +877,7 @@ Pripremi mi prezentaciju o turističkim trendovima u Dalmaciji za natjecanje iz 
 Napiši mi esej o marketingu.
                 </div>
 
-                <div style="background: #f5f5f5; padding: 1.5em; border-radius: 8px; margin: 1.5em auto; font-size: 0.9em; color: #666; font-style: italic;">
+                <div style="background: #F2F4F7; padding: 1.5em; border-radius: 8px; margin: 1.5em auto; font-size: 0.9em; color: #666; font-style: italic;">
                     <p style="margin: 0 0 0.5em 0;">
                         "Marketing je skup aktivnosti kojima poduzeće nastoji promovirati svoje proizvode i usluge. Ključni elementi marketinga su: 1) Istraživanje tržišta, 2) Promocija, 3) Distribucija..."
                     </p>
@@ -857,7 +897,7 @@ Napiši mi esej o marketingu.
             <!-- SLIDE 15: Interactive moment #2 -->
             <section class="slide-bg-light-blue">
                 <div class="amber-border-frame">
-                    <h2 style="color: var(--blue); margin-bottom: 1.5em;">⏸️ Tvoj red</h2>
+                    <h2 style="color: var(--oizt-blue); margin-bottom: 1.5em;">⏸️ Na tebi je red</h2>
                     <p style="margin-bottom: 1.5em; font-weight: 700; font-size: 1.1em;">
                         Što nedostaje ovoj naredbi?<br>
                         <span style="color: #666; font-weight: 400; font-size: 0.9em;">Kako biste je poboljšali?</span>
@@ -907,8 +947,8 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
 
                 <svg viewBox="0 0 800 380" style="width: 100%; height: auto; margin: 0.5em auto; display: block;">
                     <!-- Section 1: Uloga -->
-                    <rect x="10" y="8" width="780" height="58" fill="#e8f0fe" stroke="#1a6bff" stroke-width="2.5" rx="8"/>
-                    <text x="30" y="33" font-size="20" font-weight="700" fill="#1a6bff">🎭 ULOGA</text>
+                    <rect x="10" y="8" width="780" height="58" fill="#E8ECF4" stroke="#173E7E" stroke-width="2.5" rx="8"/>
+                    <text x="30" y="33" font-size="20" font-weight="700" fill="#173E7E">🎭 ULOGA</text>
                     <text x="30" y="55" font-size="17" fill="#333">Ti si... / Ponašaj se kao iskusni stručnjak ...</text>
 
                     <!-- Section 2: Kontekst -->
@@ -927,8 +967,8 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                     <text x="30" y="265" font-size="17" fill="#333">Duljina, struktura (popis/esej/tablica), stil...</text>
 
                     <!-- Section 5: Ograničenja -->
-                    <rect x="10" y="288" width="780" height="58" fill="#fff9f5" stroke="#e67e00" stroke-width="2.5" rx="8"/>
-                    <text x="30" y="313" font-size="20" font-weight="700" fill="#e67e00">🚫 OGRANIČENJA</text>
+                    <rect x="10" y="288" width="780" height="58" fill="#FAD9D2" stroke="#E45E41" stroke-width="2.5" rx="8"/>
+                    <text x="30" y="313" font-size="20" font-weight="700" fill="#E45E41">🚫 OGRANIČENJA</text>
                     <text x="30" y="335" font-size="17" fill="#333">Bez žargona / Max X riječi / Ne koristiti...</text>
                 </svg>
 
@@ -939,8 +979,9 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                 </aside>
             </section>
 
-            <!-- SLIDE 18: Checklist free capabilities -->
+            <!-- SLIDE 18: Checklist free capabilities + simulacija (↓) -->
             <section>
+                <section>
 
                 <!-- Top row: image + title -->
                 <div style="display: grid; grid-template-columns: 300px 1fr; gap: 1.5em; align-items: center; margin-bottom: 0.5em;">
@@ -949,7 +990,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                          style="width: 100%; max-height: 280px; object-fit: contain; display: block;">
                     <div>
                         <h2 style="margin: 0 0 0.2em 0;">Mali švicarski nožić</h2>
-                        <p style="color: var(--blue); font-weight: 700; font-size: 1.05em; margin: 0;">
+                        <p style="color: var(--oizt-blue); font-weight: 700; font-size: 1.05em; margin: 0;">
                             Ovo sve možete besplatno. Koliko od toga stvarno koristite?
                         </p>
                     </div>
@@ -961,14 +1002,14 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                     <div style="margin: 0 auto; max-width: 960px;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.7em; margin-bottom: 0.4em;">
                             <div style="font-weight: 700; color: #388e3c; font-size: 0.9em; padding: 0.35em 0.8em; background: #f5fff5; border-radius: 6px; text-align: center;">✓ Dostupno besplatno</div>
-                            <div style="font-weight: 700; color: var(--amber); font-size: 0.9em; padding: 0.35em 0.8em; background: #fff9f5; border-radius: 6px; text-align: center;">? Koristite?</div>
+                            <div style="font-weight: 700; color: var(--amber); font-size: 0.9em; padding: 0.35em 0.8em; background: #FAD9D2; border-radius: 6px; text-align: center;">? Koristite?</div>
                         </div>
                         <div style="border: 1.5px solid #e0e0e0; border-radius: 8px; overflow: hidden; font-size: 0.85em;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0;">
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Chat / pisanje teksta</div>
                                 <div style="padding: 0.38em 0.9em; color: #388e3c; font-weight: 600;">✓ gotovo svi</div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #fafafa;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #F2F4F7;">
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Učitavanje datoteka (PDF, Excel, CSV)</div>
                                 <div style="padding: 0.38em 0.9em; color: var(--amber); font-weight: 600;">? rijetki</div>
                             </div>
@@ -976,7 +1017,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Analiza podataka i kôd (Code Interpreter)</div>
                                 <div style="padding: 0.38em 0.9em; color: var(--amber); font-weight: 600;">? rijetki</div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #fafafa;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #F2F4F7;">
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Generiranje slika (Gemini, DALL·E)</div>
                                 <div style="padding: 0.38em 0.9em; color: var(--amber); font-weight: 600;">? poneki</div>
                             </div>
@@ -984,7 +1025,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Pretraživanje s citatima (Perplexity)</div>
                                 <div style="padding: 0.38em 0.9em; color: var(--amber); font-weight: 600;">? rijetki</div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #fafafa;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; background: #F2F4F7;">
                                 <div style="padding: 0.38em 0.9em; border-right: 1px solid #e0e0e0; color: #388e3c; font-weight: 600;">✓ Glasovni razgovor s AI-jem</div>
                                 <div style="padding: 0.38em 0.9em; color: #d32f2f; font-weight: 600;">? gotovo nitko</div>
                             </div>
@@ -995,14 +1036,22 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                         </div>
                     </div>
 
-                    <p style="color: var(--blue); font-weight: 700; font-size: 1em; text-align: center; margin-top: 0.6em;">
+                    <p style="color: var(--oizt-blue); font-weight: 700; font-size: 1em; text-align: center; margin-top: 0.6em;">
                         Već imate švicarski nož. Većina koristi samo jednu oštricu.
                     </p>
                 </div>
 
                 <aside class="notes">
-                    ~27 min. Ask: "Tko je koristio file upload?" Usually 0-2 hands. "Tko je koristio voice mode?" Usually 1-3. This is the "you have more than you think" moment. Don't shame — excite.
+                    ~27 min. Ask: "Tko je koristio file upload?" Usually 0-2 hands. "Tko je koristio voice mode?" Usually 1-3. This is the "you have more than you think" moment. Don't shame — excite. Pritisni ↓ za simulaciju AI preporuka u web shopu.
                 </aside>
+                </section>
+
+                <!-- Simulacija 5: AI preporuke u web shopu — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_05_webshop.html" data-background-interactive>
+                    <aside class="notes">
+                        ~28 min (opcionalno). Web shop koji predlaže proizvode temeljem prethodnih kupnji — isti mehanizam kao TikTok i Netflix, primijenjen na e-commerce. Relevantan primjer za ekonomsku školu: budući poduzetnički kontekst. → preskoči za nastavak.
+                    </aside>
+                </section>
             </section>
 
             <!-- ===== SECTION 5: IZAZOVI I RIZICI [28–35 min] ===== -->
@@ -1025,7 +1074,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
 
                 <div class="two-column" style="margin-top: 1.5em;">
                     <div class="blue-border-frame">
-                        <p style="font-weight: 700; color: var(--blue); margin-top: 0;">Što znači da "halucinira"?</p>
+                        <p style="font-weight: 700; color: var(--oizt-blue); margin-top: 0;">Što znači da "halucinira"?</p>
                         <p style="margin-bottom: 0;">AI se priviđaju stvari i nerijetko izmišlja statistički uvjerljive "činjenice", te ih predstavlja kao istinite i pouzdane.</p>
                     </div>
 
@@ -1035,7 +1084,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                             <li style="margin-bottom: 0.4em;">AI ne pretražuje internet — bazira se na trening skupu (<i>knowledge cut-off</i>)</li>
                             <li style="margin-bottom: 0.4em;">AI predviđa najvjerojatniju sljedeću riječ na temelju konteksta:</li>
                         </ul>
-                        <div style="font-size: 0.8em; background: #f5f5f5; border-radius: 6px; padding: 0.5em 0.8em; margin-top: 0.4em; line-height: 1.6;">
+                        <div style="font-size: 0.8em; background: #F2F4F7; border-radius: 6px; padding: 0.5em 0.8em; margin-top: 0.4em; line-height: 1.6;">
                             "Volim piti" → <strong>kavu</strong><br>
                             "Ako pada kiša, uzmi" → <strong>kišobran</strong><br>
                             "Glavni grad Hrvatske je" → <strong>Zagreb</strong>
@@ -1057,7 +1106,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
             <section>
                 <h2>Primjer halucinacije</h2>
 
-                <div style="background: #f5f5f5; padding: 1.5em; border-radius: 8px; margin: 1.5em auto; max-width: 850px;">
+                <div style="background: #F2F4F7; padding: 1.5em; border-radius: 8px; margin: 1.5em auto; max-width: 850px;">
                     <p style="font-weight: 700; margin: 0 0 0.8em 0;">Upit:</p>
                     <p style="margin: 0 0 1em 0; font-style: italic;">Koliko iznos BDP Hrvatske za 2024. godinu?</p>
 
@@ -1071,7 +1120,7 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                     ❌ Ova brojka nije provjerena. AI je ovo generirao uvjerljivo, oprez: može biti netočno!
                 </p>
 
-                <div style="background: #fff9f5; border-left: 6px solid var(--amber); padding: 1.5em; border-radius: 0 8px 8px 0; max-width: 850px; margin: 1em auto;">
+                <div style="background: #FAD9D2; border-left: 6px solid var(--amber); padding: 1.5em; border-radius: 0 8px 8px 0; max-width: 850px; margin: 1em auto;">
                     <p style="font-weight: 700; color: var(--amber); margin: 0 0 0.5em 0;">Pravilo:</p>
                     <p style="margin: 0; font-size: 0.95em;">Ako ne možeš navesti točan i relevantan izvor informacije, pametnije je ne koristiti.</p>
                 </div>
@@ -1119,10 +1168,10 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
 
                 <p style="text-align: center; font-size: 1.5em; font-weight: 700; line-height: 1.8; margin: 2em 0;">
                     Dozvoljeno ili zabranjeno nije ključno pitanje.<br>
-                    <span style="color: var(--blue);">Važnije je što smo naučili.</span>
+                    <span style="color: var(--oizt-blue);">Važnije je što smo naučili.</span>
                 </p>
 
-                <div style="margin: 2em auto; max-width: 900px; background: #f5f5f5; padding: 1.5em; border-radius: 8px; font-size: 0.95em; line-height: 1.8;">
+                <div style="margin: 2em auto; max-width: 900px; background: #F2F4F7; padding: 1.5em; border-radius: 8px; font-size: 0.95em; line-height: 1.8;">
                     <p style="margin: 0.5em 0;"><strong>📝 Ako AI piše umjesto tebe</strong> → nikad nećeš naučiti pisati</p>
                     <p style="margin: 0.5em 0;"><strong>📊 Ako AI analizira umjesto tebe</strong> → nećeš razviti logičko i kritičko razmišljanje</p>
                     <p style="margin: 0.5em 0;"><strong>🔍 Ako zajedno istražujete i ti u konačnici provjeravaš i donosiš odluke</strong> → to je korisna suradnja</p>
@@ -1156,7 +1205,8 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                         <li>⚠️ Osobne priče, zdravstvene informacije, informacije o drugima</li>
                     </ul>
 
-                    <div style="background: #fff9f5; border-left: 6px solid var(--amber); padding: 1.2em; border-radius: 0 6px 6px 0;">
+                   
+                    <div class="card" style="border-color: #388e3c; background: #f5fff5; text-align: left; margin-top: 0.5em;">
                         <p style="margin: 0; font-size: 0.95em;">
                             <strong><i>Rule of thumb</i>:</strong> Ako to ne bi napisao/la na javnom forumu, nemoj slati AI-ju.
                         </p>
@@ -1172,18 +1222,18 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
             <section>
                 <section>
                     <h2>AI i tržište rada iz ekonomska perspektiva</h2>
-                    <p style="color: #666; font-size: 0.9em; margin-bottom: 0.8em;">Koji zadaci su izloženi/ugroženi? (↓ za više)</p>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 0.8em;">Koji zadaci su izloženi/ugroženi?</p>
 
                     <div class="matrix-grid" style="margin-top: 0.5em;">
                         <div class="matrix-cell" style="border-color: #d32f2f; background: #fff5f5;">
                             <div class="matrix-cell-title" style="color: #d32f2f;">🔴 Visoki AI rizik</div>
                             <div class="matrix-cell-content">
-                                <strong>Rutinski rad</strong>
-                                <ul style="font-size: 0.9em; margin: 0.5em 0; padding-left: 1.2em;">
+                                <p style="font-weight: 700; margin: 0 0 0.4em 0;">Rutinski rad</p>
+                                <ul style="font-size: 0.9em; margin: 0; padding-left: 1.2em;">
                                     <li>Unos podataka i obrada računa</li>
                                     <li>Standardne korisničke usluge</li>
                                     <li>Osnovna izrada izvještaja</li>
-                                    <li>Prijevod tipskih dokumenata</li>
+                                    <li>Prijevodi tipskih dokumenata</li>
                                 </ul>
                             </div>
                         </div>
@@ -1191,8 +1241,8 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                         <div class="matrix-cell" style="border-color: #388e3c; background: #f5fff5;">
                             <div class="matrix-cell-title" style="color: #388e3c;">🟢 Niski AI rizik</div>
                             <div class="matrix-cell-content">
-                                <strong>Kreativni i suradnički rad</strong>
-                                <ul style="font-size: 0.9em; margin: 0.5em 0; padding-left: 1.2em;">
+                                <p style="font-weight: 700; margin: 0 0 0.4em 0;">Kreativni i suradnički rad</p>
+                                <ul style="font-size: 0.9em; margin: 0; padding-left: 1.2em;">
                                     <li>Savjetovanje klijenata</li>
                                     <li>Upravljanje projektima</li>
                                     <li>Pregovaranje i prodaja</li>
@@ -1210,11 +1260,11 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                     <h2>AI i tržište rada: što nastaje u simbiozi?</h2>
 
                     <div class="matrix-grid" style="margin-top: 0.5em;">
-                        <div class="matrix-cell" style="border-color: var(--blue); background: var(--light-blue);">
-                            <div class="matrix-cell-title" style="color: var(--blue);">🆕 Novi poslovi</div>
+                        <div class="matrix-cell" style="border-color: var(--oizt-blue); background: var(--light-blue);">
+                            <div class="matrix-cell-title" style="color: var(--oizt-blue);">🆕 Novi poslovi</div>
                             <div class="matrix-cell-content">
-                                <strong>Nove uloge</strong>
-                                <ul style="font-size: 0.9em; margin: 0.5em 0; padding-left: 1.2em;">
+                                <p style="font-weight: 700; margin: 0 0 0.4em 0;">Nove uloge</p>
+                                <ul style="font-size: 0.9em; margin: 0; padding-left: 1.2em;">
                                     <li>AI projekt menadžer</li>
                                     <li>Prompt dizajner (u svim sektorima)</li>
                                     <li>AI etičar / revizor</li>
@@ -1223,11 +1273,11 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
                             </div>
                         </div>
 
-                        <div class="matrix-cell" style="border-color: var(--amber); background: #fff9f5;">
+                        <div class="matrix-cell" style="border-color: var(--amber); background: #FAD9D2;">
                             <div class="matrix-cell-title" style="color: var(--amber);">🔄 Transformacija</div>
                             <div class="matrix-cell-content">
-                                <strong>Uloge koje se mijenjaju</strong>
-                                <ul style="font-size: 0.9em; margin: 0.5em 0; padding-left: 1.2em;">
+                                <p style="font-weight: 700; margin: 0 0 0.4em 0;">Uloge koje se mijenjaju</p>
+                                <ul style="font-size: 0.9em; margin: 0; padding-left: 1.2em;">
                                     <li>Računovođa + AI alati</li>
                                     <li>Marketing + AI stvaranje sadržaja</li>
                                     <li>Ljudski resursi (HR) + AI trijaža</li>
@@ -1308,31 +1358,40 @@ Ti si marketinški stručnjak. Pišem seminarski rad za Poduzetništvo (razred 3
 
             <!-- ===== SECTION 7: ZATVARANJE [42–45 min] ===== -->
 
-            <!-- SLIDE 29: Challenge -->
-            <section class="slide-bg-light-blue">
-                <div class="amber-border-frame">
-                    <h2 style="color: var(--blue); margin-top: 0; margin-bottom: 1em;">⏸️ Tvoj izazov za danas</h2>
+            <!-- SLIDE 29: Challenge + simulacija email asistenta (↓) -->
+            <section>
+                <section class="slide-bg-light-blue">
+                    <div class="amber-border-frame">
+                        <h2 style="color: var(--oizt-blue); margin-top: 0; margin-bottom: 1em;">⏸️ Tvoj izazov za danas</h2>
 
-                    <p style="font-weight: 700; font-size: 1.3em; margin-bottom: 1.5em; color: var(--amber);">
-                        Jedno konkretno: napravi to sada.
-                    </p>
+                        <p style="font-weight: 700; font-size: 1.3em; margin-bottom: 1.5em; color: var(--amber);">
+                            Jedno konkretno: napravi to sada.
+                        </p>
 
-                    <div class="prompt-box" style="font-family: 'Courier New', monospace; font-size: 0.8em; margin-bottom: 1.5em;">
+                        <div class="prompt-box" style="font-family: 'Courier New', monospace; font-size: 0.8em; margin-bottom: 1.5em;">
 Ti si [tvoja uloga u projektu].
 Radim na [konkretni zadatak, npr. seminarski rad iz marketinga].
 Kontekst: [kratki opis — razred, tema, rok].
 Trebam: [što točno — nacrt, analizu, popis ideja, sažetak].
 Format: [lista / esej / tablica / max X riječi].
 Ne koristiti: [ograničenja — žargon, određene izvore, itd.]
-                    </div>
+                        </div>
 
-                    <p style="font-size: 0.95em; color: #666; margin: 0;">
-                        Kopiraj ovo na mobitel. Isprobaj danas navečer. Usporedi rezultat s onim što si dobivao/la dosad.
-                    </p>
-                </div>
-                <aside class="notes">
-                    ~43 min. [INTERACTIVE MOMENT #3] Read the template aloud slowly. Give students 20 seconds to take a photo or copy to phone. Ask: "Tko će ovo isprobati danas?" Show of hands. Commit them publicly to trying.
-                </aside>
+                        <p style="font-size: 0.95em; color: #666; margin: 0;">
+                            Kopiraj ovo na mobitel. Isprobaj danas navečer. Usporedi rezultat s onim što si dobivao/la dosad.
+                        </p>
+                    </div>
+                    <aside class="notes">
+                        ~43 min. [INTERACTIVE MOMENT #3] Read the template aloud slowly. Give students 20 seconds to take a photo or copy to phone. Ask: "Tko će ovo isprobati danas?" Show of hands. Commit them publicly to trying. Pritisni ↓ za simulaciju AI email asistenta — konkretni prikaz primjene prompte u poslovnom kontekstu.
+                    </aside>
+                </section>
+
+                <!-- Simulacija 6: AI email asistent — full-screen -->
+                <section data-background-iframe="AI_simulacije_files/sim_06_email.html" data-background-interactive>
+                    <aside class="notes">
+                        ~44 min (opcionalno). Email asistent pokazuje točno ono što je učenicima najkorištenije odmah: pisanje poslovnih, formalnih ili školskih emailova uz dobar prompt. Poveži s predloškom s prethodnog slajda. → preskoči za nastavak.
+                    </aside>
+                </section>
             </section>
 
             <!-- SLIDE 30: CTA — studijski programi -->
@@ -1349,7 +1408,7 @@ Ne koristiti: [ograničenja — žargon, određene izvore, itd.]
                             <p style="font-size: 0.85em; color: #555; margin-top: 0;">Praktična znanja u razvoju softvera i održavanju kompleksnih informacijskih sustava.</p>
                         </div>
                         <p style="margin-top: 1.2em; font-weight: 700;">
-                            Web: <a href="https://iz.unizd.hr" style="color: var(--blue);">iz.unizd.hr</a>
+                            Web: <a href="https://iz.unizd.hr" style="color: var(--oizt-blue);">iz.unizd.hr</a>
                         </p>
                     </div>
                     <div style="flex: 1; text-align: center;">
@@ -1379,10 +1438,10 @@ Ne koristiti: [ograničenja — žargon, određene izvore, itd.]
 
                     <p style="font-size: 1.5em; margin-bottom: 1.5em;">
                         AI nije budućnost.<br>
-                        <span style="color: var(--blue); font-weight: 700;">AI je sadašnjost.</span>
+                        <span style="color: var(--oizt-blue); font-weight: 700;">AI je sadašnjost.</span>
                     </p>
 
-                    <p style="font-size: 1.3em; color: var(--blue);">Pitanja? 💬</p>
+                    <p style="font-size: 1.3em; color: var(--oizt-blue);">Pitanja? 💬</p>
 
                     <div style="margin-top: 1.5em; padding-top: 1em; border-top: 2px solid #e0e0e0;">
                         <p style="font-size: 0.95em; margin: 0.3em 0;">
