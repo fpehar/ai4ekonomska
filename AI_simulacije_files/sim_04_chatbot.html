@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Shop Chatbot – AI simulacija</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f8f9fb;
+    --white: #ffffff;
+    --border: #e2e6ea;
+    --text: #1a202c;
+    --muted: #718096;
+    --brand: #2563eb;
+    --brand-l: #eff6ff;
+    --brand-d: #1d4ed8;
+    --bot-bg: #f0f4ff;
+    --user-bg: #2563eb;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 64px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .shop-logo { font-size: 1.3rem; font-weight: 800; color: var(--brand); letter-spacing: -0.5px; }
+  .shop-logo span { color: var(--text); }
+  .header-nav { display: flex; gap: 20px; font-size: 0.85rem; color: var(--muted); }
+  .header-nav a { text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .header-nav a:hover { color: var(--brand); }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 0.85rem; color: var(--muted); }
+
+  /* EXPLAINER */
+  .explainer {
+    background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+    border-bottom: 2px solid var(--brand);
+    padding: 12px 20px;
+    font-size: 0.83rem;
+    color: #555;
+    line-height: 1.6;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .explainer-text { flex: 1; min-width: 200px; }
+  .explainer strong { color: var(--brand); }
+  .exp-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .epill {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    color: var(--text);
+  }
+  .epill b { color: var(--brand); }
+  .ai-badge {
+    background: var(--brand);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  /* MAIN */
+  .main {
+    display: flex;
+    flex: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    gap: 20px;
+    min-height: 0;
+  }
+
+  /* CHAT */
+  .chat-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .chat-widget {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    background: var(--brand);
+    color: white;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .chat-avatar {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .chat-header-info { flex: 1; }
+  .chat-bot-name { font-weight: 700; font-size: 0.95rem; }
+  .chat-status { font-size: 0.73rem; opacity: 0.8; display: flex; align-items: center; gap: 5px; }
+  .chat-status::before { content:''; display:inline-block; width:7px; height:7px; border-radius:50%; background:#4ade80; }
+  .chat-mode { font-size: 0.72rem; background: rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 12px; margin-left: auto; }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 350px;
+    max-height: 500px;
+  }
+
+  .msg { display: flex; gap: 10px; align-items: flex-end; }
+  .msg.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .msg.bot .msg-avatar { background: var(--brand-l); color: var(--brand); }
+  .msg.user .msg-avatar { background: var(--brand); color: white; }
+
+  .msg-bubble {
+    max-width: 78%;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .msg.bot .msg-bubble {
+    background: var(--bot-bg);
+    border-bottom-left-radius: 4px;
+    color: var(--text);
+  }
+  .msg.user .msg-bubble {
+    background: var(--user-bg);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg-time { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+  /* Product card in chat */
+  .product-card-chat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+    display: flex;
+    gap: 0;
+  }
+  .pcc-img {
+    width: 72px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .pcc-info { padding: 8px 10px; flex: 1; }
+  .pcc-name { font-weight: 700; font-size: 0.82rem; }
+  .pcc-price { color: var(--brand); font-weight: 700; font-size: 0.9rem; margin: 2px 0; }
+  .pcc-rating { font-size: 0.72rem; color: var(--muted); }
+  .pcc-btn {
+    display: inline-block;
+    margin-top: 5px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Typing indicator */
+  .typing { display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+  .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)} }
+
+  /* Quick replies */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .qr-btn {
+    background: white;
+    border: 1.5px solid var(--brand);
+    color: var(--brand);
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .qr-btn:hover { background: var(--brand); color: white; }
+
+  /* Input */
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    flex-shrink: 0;
+  }
+  .chat-input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--brand); }
+  .send-btn {
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { background: var(--brand-d); }
+
+  /* SIDEBAR */
+  .sidebar { width: 300px; flex-shrink: 0; }
+  .side-panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    position: sticky;
+    top: 16px;
+  }
+  .side-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; flex-shrink: 0; }
+
+  .ai-log {
+    background: #f8faff;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    min-height: 80px;
+    max-height: 200px;
+    overflow-y: auto;
+    line-height: 1.8;
+  }
+  .ai-log .log-line { animation: fadeIn 0.3s ease; }
+  .ai-log .key { color: var(--brand); }
+  .ai-log .val { color: var(--green); }
+  .ai-log .warn { color: var(--orange); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .scenario-list { display: flex; flex-direction: column; gap: 6px; }
+  .scenario-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .scenario-btn:hover { background: var(--brand-l); border-color: var(--brand); color: var(--brand); }
+  .scenario-btn .s-icon { margin-right: 6px; }
+
+  .intent-box {
+    background: var(--brand-l);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    color: #1e40af;
+    line-height: 1.6;
+  }
+  .intent-label { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--brand); margin-bottom: 4px; }
+
+  @media (max-width: 700px) {
+    .main { flex-direction: column; padding: 10px; gap: 12px; }
+    .sidebar { width: 100%; }
+    .side-panel { position: static; }
+    .chat-messages { max-height: 340px; }
+    .header-nav { display: none; }
+  }
+
+  .reset-link { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 12px; cursor: pointer; text-decoration: underline; }
+  .reset-link:hover { color: var(--brand); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="shop-logo">Sport<span>Plus</span></div>
+  <div class="header-nav">
+    <a href="#">Oprema</a>
+    <a href="#">Odjeća</a>
+    <a href="#">Obuća</a>
+    <a href="#">Akcija</a>
+  </div>
+  <div class="header-right">🛒 Košarica (0) · 👤 Prijava</div>
+</div>
+
+<div class="explainer">
+  <div class="explainer-text">
+    <strong>Kako AI chatbot pomaže web trgovini?</strong> Chatbot razumije namjeru kupca, pronalazi proizvode, rješava reklamacije i usmjerava na pravu stranicu — 
+    sve to automatski, <strong>24 sata na dan</strong>, bez čekanja na operatora.
+    <div class="exp-pills">
+      <div class="epill"><b>Namjera:</b> klasificira upit kupca</div>
+      <div class="epill"><b>Entiteti:</b> prepoznaje proizvode, veličine, probleme</div>
+      <div class="epill"><b>Odgovor:</b> personaliziran odgovor u sekundi</div>
+    </div>
+  </div>
+  <div class="ai-badge"><div class="ai-dot"></div>AI Aktivan · Upiši pitanje ili odaberi scenarij</div>
+</div>
+
+<div class="main">
+  <div class="chat-col">
+    <div class="chat-widget">
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-header-info">
+          <div class="chat-bot-name">SportPlus Asistent</div>
+          <div class="chat-status">Online · Odgovara za &lt;1 sekundu</div>
+        </div>
+        <div class="chat-mode">AI MODE</div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be injected -->
+      </div>
+
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Upiši poruku ili odaberi scenarij →" onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="send-btn" onclick="sendMsg()">Pošalji ↑</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <!-- Scenarios -->
+    <div class="side-panel">
+      <div class="side-title">🎯 Isprobaj scenarije</div>
+      <div class="scenario-list">
+        <div class="scenario-btn" onclick="tryScenario('reklamacija')"><span class="s-icon">😤</span> Paket nije stigao</div>
+        <div class="scenario-btn" onclick="tryScenario('preporuka')"><span class="s-icon">🏃</span> Treba mi oprema za trčanje</div>
+        <div class="scenario-btn" onclick="tryScenario('velicina')"><span class="s-icon">👟</span> Koji broj tenisica odabrati?</div>
+        <div class="scenario-btn" onclick="tryScenario('povrat')"><span class="s-icon">↩️</span> Kako vratiti proizvod?</div>
+        <div class="scenario-btn" onclick="tryScenario('akcija')"><span class="s-icon">🔥</span> Ima li kakve akcije?</div>
+        <div class="scenario-btn" onclick="tryScenario('dostava')"><span class="s-icon">📦</span> Koliko traje dostava?</div>
+      </div>
+    </div>
+
+    <!-- AI Intent -->
+    <div class="side-panel">
+      <div class="side-title"><div class="live-dot"></div> AI Analiza namjere</div>
+      <div class="intent-box" id="intentBox">
+        <div class="intent-label">Čeka unos</div>
+        Pošalji poruku da vidiš kako AI prepoznaje što kupac želi.
+      </div>
+    </div>
+
+    <!-- AI Log -->
+    <div class="side-panel">
+      <div class="side-title"><div class="live-dot"></div> Što AI radi interno</div>
+      <div class="ai-log" id="aiLog">
+        <div class="log-line">→ <span class="key">status</span>: <span class="val">"ready"</span></div>
+        <div class="log-line">→ <span class="key">model</span>: <span class="val">"GPT-4o mini"</span></div>
+        <div class="log-line">→ <span class="key">products_loaded</span>: <span class="val">2847</span></div>
+      </div>
+      <div class="reset-link" onclick="resetChat()">↺ Resetiraj razgovor</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = {
+  trcanje: [
+    { name:'Nike Air Zoom Pegasus 41', emoji:'👟', price:'149,99 €', rating:'⭐ 4.8 (234)', bg:'#f0f4ff' },
+    { name:'Adidas Ultraboost 24', emoji:'🏃', price:'179,99 €', rating:'⭐ 4.9 (412)', bg:'#f0fff4' },
+    { name:'Asics Gel-Nimbus 26', emoji:'✨', price:'134,99 €', rating:'⭐ 4.7 (189)', bg:'#fff7f0' },
+  ],
+  oprema: [
+    { name:'Garmin Forerunner 265', emoji:'⌚', price:'449,99 €', rating:'⭐ 4.9 (156)', bg:'#f0f4ff' },
+    { name:'Set boca za vodu + ruksak', emoji:'🎒', price:'49,99 €', rating:'⭐ 4.6 (88)', bg:'#f0fff4' },
+  ],
+};
+
+const RESPONSES = {
+  reklamacija: {
+    user: 'Naručio sam tenisice prije tjedan dana i paket još nije stigao!',
+    intent: { label: 'REKLAMACIJA – Kasna dostava', color: '#ef4444', desc: 'Korisnik je uzrujan, detektirana visoka urgentnost. Prioritet: smirivanje i rješenje.', entities: ['narudžba', 'kasna dostava', 'tjedan dana'] },
+    log: [['intent', '"complaint_delivery"'], ['sentiment', '"negative – urgency: HIGH"'], ['action', '"fetch_order_status"'], ['escalation', '"agent_notified"']],
+    response: `Razumijem Vašu zabrinutost i ispričavam se za kašnjenje! 😔\n\nOdmah sam provjerio/la status Vaše narudžbe:\n\n📦 **Status:** U dostavi – kurirska vozilo je u Vašem gradu\n🕐 **Procijenjeno:** Danas do 18:00h\n📍 **Lokacija:** Distribucijski centar Zagreb\n\nAko paket ne stigne do sutra, automatski ću inicirati povrat sredstava ili ponovnu narudžbu – bez ikakvih troškova za Vas.\n\nŽelite li da odmah kontaktiram kurira?`,
+    quickReplies: ['Da, kontaktaj kurira', 'Inicijaj povrat', 'Hvala, čekat ću']
+  },
+  preporuka: {
+    user: 'Tražim dobru opremu za trčanje, počinjem trenirati',
+    intent: { label: 'PRETRAGA PROIZVODA – Trčanje', color: '#2563eb', desc: 'Početnik, treba kompletan set. AI prepoznaje potrebu za personaliziranom preporukom.', entities: ['trčanje', 'početnik', 'oprema'] },
+    log: [['intent', '"product_search"'], ['category', '"running_gear"'], ['user_level', '"beginner"'], ['action', '"fetch_recommendations"']],
+    response: 'Odlična odluka – trčanje je izvrsno za zdravlje! 🏃\n\nZa početnika preporučam da počnemo s tenisicama jer su najvažniji dio opreme:',
+    products: PRODUCTS.trcanje,
+    extraText: 'Uz tenisice, za start su dovoljne udobne sportske hlače i majica. Koji je Vaš budžet?',
+    quickReplies: ['Do 100 €', '100-200 €', 'Bez limita', 'Pokaži i ostalu opremu']
+  },
+  velicina: {
+    user: 'Nosim 43 u Nike Air Max ali ne znam koji broj u Adidasu',
+    intent: { label: 'INFORMACIJA – Sizing pomoć', color: '#8b5cf6', desc: 'Zahtjev za komparativne veličine između brendova. AI koristi internu tablicu.', entities: ['Nike', 'Adidas', 'broj 43'] },
+    log: [['intent', '"size_guidance"'], ['brand_from', '"Nike"'], ['brand_to', '"Adidas"'], ['size', '"43 EU"'], ['lookup', '"size_chart_db"']],
+    response: `Razumijem – svaki brend ima malo drugačiji krojni broj! 📊\n\n**Nike 43 = Adidas 43.3 (službeno)**\n\nAli u praksi:\n✅ Za normalno stopalo → uzmite **43**\n✅ Za šire stopalo → preporučam **43.5**\n⚠️ Adidas Ultraboost krojen je uže od Air Maxa\n\nNaša savjet: Ako možete, probajte u fizičkoj trgovini ili naručite oba broja – povrat je besplatan i bez pitanja! 😊`,
+    quickReplies: ['Hvala, uzimam 43', 'Uzimam 43.5', 'Naruči 43', 'Više o povratima']
+  },
+  povrat: {
+    user: 'Kako mogu vratiti tenisice koje su mi premale?',
+    intent: { label: 'POVRAT PROIZVODA', color: '#f59e0b', desc: 'Standardni zahtjev za povrat. AI prikazuje jasne korake i ubrzava proces.', entities: ['povrat', 'tenisice', 'veličina'] },
+    log: [['intent', '"return_request"'], ['reason', '"wrong_size"'], ['policy', '"30_days_free_return"'], ['action', '"generate_return_label"']],
+    response: `Nema problema – naš povrat je potpuno besplatan! ↩️\n\n**3 jednostavna koraka:**\n\n1️⃣ Prijavite povrat ovdje ili u aplikaciji\n2️⃣ Ispišite besplatnu naljepnicu (šaljemo emailom)\n3️⃣ Predajte paket u bilo kojoj pošti\n\n⏱️ **Rok za povrat:** 30 dana od kupnje\n💳 **Povrat novca:** 3-5 radnih dana na karticu\n\nŽelite li da odmah generiramo naljepnicu za povrat?`,
+    quickReplies: ['Da, pošalji naljepnicu', 'Želim zamjenu', 'Koliko traje povrat?']
+  },
+  akcija: {
+    user: 'Ima li kakvih popusta ili akcija trenutno?',
+    intent: { label: 'PRETRAGA AKCIJA', color: '#10b981', desc: 'Korisnik traži promocije. AI provjerava aktualne kampanje i personalizira ponudu.', entities: ['popust', 'akcija', 'promocija'] },
+    log: [['intent', '"promotions_search"'], ['action', '"fetch_active_campaigns"'], ['personalized', '"true"'], ['campaigns_found', '3]']],
+    response: `Imate sreće – upravo teku 3 akcije! 🔥\n\n**🟠 LJETNA RASPRODAJA** (još 3 dana)\nDo -40% na odabranu obuću\n\n**🔵 2+1 GRATIS**\nKupiš 2 komada odjeće = treći besplatan\n\n**🟢 FREE DOSTAVA**\nNa sve narudžbe iznad 60 € (ovaj tjedan)\n\nZa Vas posebno: Zapazili smo da ste gledali tenisice za trčanje – one su u akciji -25%! 👟`,
+    quickReplies: ['Pokaži rasprodaju', 'Primijeni 2+1', 'Prikaži tenisice -25%']
+  },
+  dostava: {
+    user: 'Koliko traje dostava i gdje mogu pratiti paket?',
+    intent: { label: 'INFORMACIJA – Dostava', color: '#06b6d4', desc: 'Čest FAQ. AI odmah vraća standardiziranu informaciju bez escalacije na agenta.', entities: ['dostava', 'praćenje', 'rok'] },
+    log: [['intent', '"delivery_info"'], ['type', '"FAQ_standard"'], ['escalate', '"false"'], ['response_time', '"0.3s"']],
+    response: `Sve o dostavi na jednom mjestu! 📦\n\n**⏱️ Rokovi:**\n• Standardna dostava: **2-3 radna dana**\n• Express (24h): **+4,99 €**\n• Besplatna dostava: narudžbe **iznad 60 €**\n\n**📍 Praćenje:**\nNakon potvrde narudžbe, dobivate SMS i email s tracking linkom. Pratite u realnom vremenu!\n\n**🏪 Dostupnost:**\nDostavljamo ponedjeljak–subota, 8-20h. Za nedostupnost kurir ostavlja obavijest.\n\nŽelite naručiti nešto?`,
+    quickReplies: ['Naruči s express dostavom', 'Pokaži proizvode', 'Hvala!']
+  }
+};
+
+let history = [];
+let isTyping = false;
+
+function init() {
+  addBotMsg('Zdravo! 👋 Ja sam SportPlus AI asistent. Mogu Vam pomoći s:\n\n🔍 Pronalaskom proizvoda\n📦 Praćenjem narudžbe\n↩️ Povratom i reklamacijom\n🔥 Aktualnim akcijama\n\nKako Vam mogu pomoći danas?', ['Pokaži akcije', 'Trebam opremu', 'Imam problem s narudžbom']);
+}
+
+function addBotMsg(text, quickReplies = [], products = null, extra = null) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+
+  let productsHTML = '';
+  if (products) {
+    productsHTML = products.map(p => `
+      <div class="product-card-chat">
+        <div class="pcc-img" style="background:${p.bg}">${p.emoji}</div>
+        <div class="pcc-info">
+          <div class="pcc-name">${p.name}</div>
+          <div class="pcc-price">${p.price}</div>
+          <div class="pcc-rating">${p.rating}</div>
+          <button class="pcc-btn" onclick="handleQR('Dodaj u košaricu')">+ Košarica</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const extraHTML = extra ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e0e8ff">${extra}</div>` : '';
+
+  const qrHTML = quickReplies.length ? `
+    <div class="quick-replies">
+      ${quickReplies.map(q => `<button class="qr-btn" onclick="handleQR('${q}')">${q}</button>`).join('')}
+    </div>` : '';
+
+  const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+  div.innerHTML = `
+    <div class="msg-avatar">🤖</div>
+    <div>
+      <div class="msg-bubble">${formattedText}${productsHTML}${extraHTML}${qrHTML}</div>
+      <div class="msg-time">${getTime()}</div>
+    </div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div class="msg-avatar">👤</div>
+    <div>
+      <div class="msg-bubble">${text}</div>
+      <div class="msg-time" style="text-align:right">${getTime()}</div>
+    </div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typingIndicator';
+  div.innerHTML = `
+    <div class="msg-avatar">🤖</div>
+    <div class="msg-bubble">
+      <div class="typing">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('hr-HR', { hour:'2-digit', minute:'2-digit' });
+}
+
+function appendLog(lines) {
+  const log = document.getElementById('aiLog');
+  lines.forEach(([key, val]) => {
+    const div = document.createElement('div');
+    div.className = 'log-line';
+    div.innerHTML = `→ <span class="key">${key}</span>: <span class="val">${val}</span>`;
+    log.appendChild(div);
+  });
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateIntent(intent) {
+  document.getElementById('intentBox').innerHTML = `
+    <div class="intent-label" style="color:${intent.color}">${intent.label}</div>
+    ${intent.desc}
+    <div style="margin-top:8px">📌 <strong>Entiteti:</strong> ${intent.entities.join(', ')}</div>
+  `;
+}
+
+function tryScenario(key) {
+  if (isTyping) return;
+  const sc = RESPONSES[key];
+  if (!sc) return;
+
+  addUserMsg(sc.user);
+  processResponse(sc);
+}
+
+function sendMsg() {
+  if (isTyping) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  addUserMsg(text);
+
+  // Simple keyword detection
+  const lower = text.toLowerCase();
+  let key = null;
+  if (lower.includes('paket') || lower.includes('stigao') || lower.includes('narudžba') || lower.includes('reklamaci')) key = 'reklamacija';
+  else if (lower.includes('trčan') || lower.includes('trcanje') || lower.includes('trk') || lower.includes('oprem') || lower.includes('tenis')) key = 'preporuka';
+  else if (lower.includes('broj') || lower.includes('veličin') || lower.includes('velicin') || lower.includes('nike') || lower.includes('adidas')) key = 'velicina';
+  else if (lower.includes('povrat') || lower.includes('vrać') || lower.includes('premali')) key = 'povrat';
+  else if (lower.includes('akcij') || lower.includes('popust') || lower.includes('snižen') || lower.includes('sale')) key = 'akcija';
+  else if (lower.includes('dostav') || lower.includes('pošilj') || lower.includes('praćen')) key = 'dostava';
+
+  if (key) {
+    processResponse(RESPONSES[key]);
+  } else {
+    // Fallback
+    isTyping = true;
+    showTyping();
+    appendLog([['intent', '"other"'], ['confidence', '"low"'], ['action', '"clarification"']]);
+    setTimeout(() => {
+      hideTyping();
+      isTyping = false;
+      addBotMsg('Hvala na poruci! Kako bih Vam bolje pomogao/la, molim odaberite temu:\n\n', ['📦 Reklamacija', '🏃 Pronalazak opreme', '↩️ Povrat', '🔥 Akcije', '📍 Dostava']);
+      updateIntent({ label: 'NEPREPOZNATA NAMJERA', color: '#f59e0b', desc: 'Niska pouzdanost klasifikacije. AI traži pojašnjenje umjesto da pogriješi.', entities: ['generalni upit'] });
+    }, 1200);
+  }
+}
+
+function processResponse(sc) {
+  isTyping = true;
+  showTyping();
+  updateIntent(sc.intent);
+  appendLog(sc.log || []);
+
+  const delay = 900 + Math.random() * 600;
+  setTimeout(() => {
+    hideTyping();
+    isTyping = false;
+    addBotMsg(sc.response, sc.quickReplies || [], sc.products || null, sc.extraText || null);
+  }, delay);
+}
+
+function handleQR(text) {
+  if (isTyping) return;
+  document.getElementById('chatInput').value = text;
+  sendMsg();
+}
+
+function resetChat() {
+  document.getElementById('chatMessages').innerHTML = '';
+  document.getElementById('aiLog').innerHTML = `
+    <div class="log-line">→ <span class="key">status</span>: <span class="val">"ready"</span></div>
+    <div class="log-line">→ <span class="key">model</span>: <span class="val">"GPT-4o mini"</span></div>
+    <div class="log-line">→ <span class="key">products_loaded</span>: <span class="val">2847</span></div>
+  `;
+  document.getElementById('intentBox').innerHTML = `<div class="intent-label">Čeka unos</div>Pošalji poruku da vidiš kako AI prepoznaje što kupac želi.`;
+  init();
+}
+
+init();
+</script>
+</body>
+</html>

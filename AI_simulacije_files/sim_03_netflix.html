@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netflix Preporuke – Simulacija AI algoritma</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;700&display=swap');
+
+  :root {
+    --bg: #141414;
+    --surface: #1f1f1f;
+    --card: #2a2a2a;
+    --border: #333;
+    --red: #e50914;
+    --red2: #b81d24;
+    --text: #e5e5e5;
+    --muted: #999;
+    --gold: #f5c518;
+    --green: #46d369;
+    --match-high: #46d369;
+    --match-mid: #f5c518;
+    --match-low: #e87c25;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(180deg, #000 0%, transparent 100%);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(20,20,20,0.95);
+    border-bottom: 1px solid var(--border);
+  }
+  .nf-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--red);
+    letter-spacing: 2px;
+  }
+  .header-info { flex: 1; font-size: 0.82rem; color: var(--muted); }
+  .header-info strong { color: var(--text); }
+
+  /* EXPLAINER */
+  .explainer {
+    background: linear-gradient(135deg, #1a0000 0%, #0a0a1a 100%);
+    border-bottom: 2px solid var(--red);
+    padding: 16px 24px;
+    font-size: 0.85rem;
+    color: #aaa;
+    line-height: 1.6;
+  }
+  .explainer strong { color: #e87c25; }
+  .exp-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+  }
+  .pill b { color: var(--red); }
+
+  /* STEP WIZARD */
+  .wizard {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  .step { display: none; }
+  .step.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .step-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .step-sub b { color: var(--red); }
+
+  /* GENRE PICKER */
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .genre-card {
+    border-radius: 10px;
+    padding: 20px 14px;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .genre-card:hover { transform: scale(1.04); }
+  .genre-card.selected { border-color: white; transform: scale(1.04); }
+  .genre-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 6px; right: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+    background: var(--red);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+  }
+  .genre-emoji { font-size: 2.4rem; margin-bottom: 8px; }
+  .genre-name { font-size: 0.88rem; font-weight: 600; }
+
+  .btn-primary {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 32px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--red2); transform: scale(1.03); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* WATCH HISTORY STEP */
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .history-card {
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .history-card:hover { transform: scale(1.04); }
+  .history-card.watched { border-color: var(--green); }
+  .history-card.watched::after {
+    content: '👀 Gledao/la';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(70,211,105,0.85);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 3px;
+  }
+  .hcard-img {
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+  }
+  .hcard-title { padding: 6px 8px; font-size: 0.75rem; font-weight: 600; line-height: 1.3; }
+
+  /* RECOMMENDATIONS STEP */
+  .analysis-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .analysis-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  .analysis-item {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  .ai-emoji { font-size: 1.4rem; }
+  .ai-label { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+  .ai-score { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--green); }
+
+  .recs-section { margin-bottom: 28px; }
+  .recs-row-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .recs-row-title .badge {
+    font-size: 0.7rem;
+    background: var(--red);
+    padding: 3px 10px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .rec-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .rec-card {
+    flex-shrink: 0;
+    width: 160px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .rec-card:hover { transform: scale(1.06); border-color: var(--muted); z-index: 10; }
+
+  .rc-thumb {
+    aspect-ratio: 2/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+  }
+  .rc-match {
+    position: absolute;
+    top: 8px; left: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .rc-match.high { background: var(--match-high); color: #000; }
+  .rc-match.mid { background: var(--match-mid); color: #000; }
+  .rc-match.low { background: var(--match-low); color: #fff; }
+
+  .rc-why {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.75);
+    padding: 6px 8px;
+    font-size: 0.65rem;
+    color: #ccc;
+    opacity: 0;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(3px);
+  }
+  .rec-card:hover .rc-why { opacity: 1; }
+
+  .rc-info { padding: 8px 8px 10px; }
+  .rc-title { font-size: 0.82rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+  .rc-meta { font-size: 0.7rem; color: var(--muted); }
+  .rc-genre { font-size: 0.68rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+
+  .why-panel {
+    background: linear-gradient(135deg, #0a1a0a, #1a0a00);
+    border: 1px solid #333;
+    border-left: 3px solid var(--green);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 20px;
+    font-size: 0.82rem;
+    color: #bbb;
+    line-height: 1.7;
+  }
+  .why-panel b { color: var(--green); }
+
+  .back-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 10px;
+  }
+  .back-btn:hover { border-color: var(--text); color: var(--text); }
+
+  .step-indicator {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+  .step-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--red); width: 24px; border-radius: 5px; }
+  .step-dot.done { background: var(--green); }
+
+  @media (max-width: 640px) {
+    .genre-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .genre-card { padding: 12px 8px; }
+    .genre-emoji { font-size: 1.8rem; }
+    .history-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .rec-card { width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="nf-logo">NETFLIX</div>
+  <div class="header-info"><strong>Simulacija AI preporuka</strong> · Odaberi žanrove i povijest gledanja — vidi kako algoritam predlaže filmove</div>
+</div>
+
+<div class="explainer">
+  <strong>Kako Netflix predviđa što ćeš gledati?</strong> Algoritam kombinira tvoje <strong>žanrove</strong>, povijest gledanja, ocjene i čak koliko brzo si kliknuo/la "play". 
+  Na temelju toga izračunava <strong>postotak podudarnosti</strong> i grupira preporuke u personalizirane redove — svaki korisnik vidi drugačiji Netflix.
+  <div class="exp-pills">
+    <div class="pill"><b>Korak 1:</b> Odaberi žanrove koje voliš</div>
+    <div class="pill"><b>Korak 2:</b> Označi što si gledao/la</div>
+    <div class="pill"><b>Korak 3:</b> Vidi personalizirane preporuke s obrazloženjem</div>
+  </div>
+</div>
+
+<div class="wizard">
+  <!-- Step indicators -->
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+  </div>
+
+  <!-- STEP 0: Genre Selection -->
+  <div class="step active" id="step0">
+    <div class="step-title">Koji žanrovi te zanimaju?</div>
+    <div class="step-sub">Odaberi <b>2–4 žanra</b> koja najčešće gledaš</div>
+    <div class="genre-grid" id="genreGrid"></div>
+    <button class="btn-primary" id="btnStep1" onclick="goStep(1)" disabled>Dalje →</button>
+  </div>
+
+  <!-- STEP 1: Watch History -->
+  <div class="step" id="step1">
+    <div class="step-title">Što si nedavno gledao/la?</div>
+    <div class="step-sub">Klikni na naslove koje si gledao/la — algoritam analizira tvoje ponašanje</div>
+    <div class="history-grid" id="historyGrid"></div>
+    <button class="back-btn" onclick="goStep(0)">← Natrag</button>
+    <button class="btn-primary" onclick="generateRecs()">Generiraj preporuke 🤖</button>
+  </div>
+
+  <!-- STEP 2: Recommendations -->
+  <div class="step" id="step2">
+    <div class="step-title">Tvoje personalizirane preporuke</div>
+    <div class="step-sub">AI je analizirao tvoje preferencije i generirao personalizirani feed</div>
+
+    <div class="analysis-box">
+      <div class="analysis-title">🤖 Što je AI naučio o tebi</div>
+      <div class="analysis-grid" id="analysisGrid"></div>
+    </div>
+
+    <div id="recsContainer"></div>
+
+    <div class="why-panel" id="whyPanel"></div>
+
+    <br>
+    <button class="back-btn" onclick="goStep(0)">← Počni iznova</button>
+  </div>
+</div>
+
+<script>
+const GENRES = [
+  { id:'action',  name:'Akcija',      emoji:'💥', color:'#ef4444', bg:'#3d0f0f' },
+  { id:'comedy',  name:'Komedija',    emoji:'😂', color:'#f59e0b', bg:'#3d2800' },
+  { id:'drama',   name:'Drama',       emoji:'🎭', color:'#8b5cf6', bg:'#1e1030' },
+  { id:'sci_fi',  name:'Sci-Fi',      emoji:'🚀', color:'#06b6d4', bg:'#021820' },
+  { id:'horror',  name:'Horror',      emoji:'👻', color:'#64748b', bg:'#0a0a14' },
+  { id:'romance', name:'Romantika',   emoji:'💕', color:'#ec4899', bg:'#300020' },
+  { id:'docu',    name:'Dokumentarci',emoji:'📹', color:'#84cc16', bg:'#0f1e00' },
+  { id:'anime',   name:'Anime',       emoji:'⚡', color:'#f97316', bg:'#1e0e00' },
+  { id:'thriller',name:'Triler',      emoji:'🔪', color:'#94a3b8', bg:'#0a0a0a' },
+];
+
+const CATALOG = [
+  // Action
+  { id:'a1', genres:['action','sci_fi'], title:'Nebo pada', emoji:'💥', bg:'#2a0a0a', year:'2024', rating:'8.2', runtime:'2h 8m', desc:'Akcijski hit koji spaja SF i špijunažu' },
+  { id:'a2', genres:['action','thriller'], title:'Zadnji kontakt', emoji:'🔫', bg:'#1a0a0a', year:'2023', rating:'7.8', runtime:'1h 54m', desc:'Napeta avantura kroz Europu' },
+  { id:'a3', genres:['action'], title:'Jurnjava kroz grad', emoji:'🚗', bg:'#250a0a', year:'2024', rating:'7.1', runtime:'1h 45m', desc:'Brze scene i neočekivani zaokret' },
+  // Comedy
+  { id:'c1', genres:['comedy'], title:'Ured pun ludih', emoji:'😂', bg:'#2a1a00', year:'2023', rating:'8.5', runtime:'30min/ep', desc:'Serija o startupima koji ne znaju za se' },
+  { id:'c2', genres:['comedy','romance'], title:'Slučajna veza', emoji:'💑', bg:'#1e1000', year:'2024', rating:'7.4', runtime:'1h 38m', desc:'Rom-com s modernim twistom' },
+  // Drama
+  { id:'d1', genres:['drama'], title:'Lom', emoji:'🎭', bg:'#150e28', year:'2023', rating:'9.1', runtime:'10 ep × 55min', desc:'Obiteljska drama za naše vrijeme' },
+  { id:'d2', genres:['drama','romance'], title:'Pismo bez adrese', emoji:'✉️', bg:'#1a0e25', year:'2024', rating:'8.3', runtime:'1h 52m', desc:'Priča o ljubavi kroz generacije' },
+  // Sci-Fi
+  { id:'s1', genres:['sci_fi'], title:'Svemir nije tih', emoji:'🌌', bg:'#02101a', year:'2024', rating:'8.7', runtime:'8 ep × 60min', desc:'Istraživanje daleke galaksije' },
+  { id:'s2', genres:['sci_fi','thriller'], title:'Protokol Omega', emoji:'🤖', bg:'#011018', year:'2023', rating:'8.0', runtime:'2h 4m', desc:'AI koji odlučuje o sudbini čovječanstva' },
+  // Horror
+  { id:'h1', genres:['horror'], title:'Kuća na rubu', emoji:'🏚️', bg:'#060606', year:'2024', rating:'7.6', runtime:'1h 48m', desc:'Psihološki horror koji ne pušta' },
+  { id:'h2', genres:['horror','thriller'], title:'Noć bez kraja', emoji:'🌑', bg:'#080808', year:'2023', rating:'7.2', runtime:'1h 41m', desc:'Survival horror u izoliranom selu' },
+  // Romance
+  { id:'r1', genres:['romance'], title:'Kad sve padne na svoje', emoji:'💞', bg:'#200010', year:'2024', rating:'8.1', runtime:'2h 2m', desc:'Ljubavna priča u srcu Pariza' },
+  // Docu
+  { id:'do1', genres:['docu'], title:'Tajna oceana', emoji:'🐠', bg:'#001510', year:'2023', rating:'9.0', runtime:'6 ep × 50min', desc:'BBC dokumentarac o životu mora' },
+  { id:'do2', genres:['docu','sci_fi'], title:'AI — nova granica', emoji:'🧠', bg:'#020a14', year:'2024', rating:'8.8', runtime:'3 ep × 55min', desc:'Tko kontrolira budućnost tehnologije?' },
+  // Anime
+  { id:'an1', genres:['anime','action'], title:'Demon Vrata', emoji:'⚔️', bg:'#1e0800', year:'2024', rating:'9.2', runtime:'24 ep', desc:'Epski anime koji osvaja sve liste' },
+  { id:'an2', genres:['anime','sci_fi'], title:'Kiberpunk Noć', emoji:'🌃', bg:'#12050f', year:'2023', rating:'8.6', runtime:'13 ep', desc:'Distopični anime neonskih boja' },
+  // Thriller
+  { id:'t1', genres:['thriller'], title:'Svjedok X', emoji:'🔍', bg:'#0a0a0a', year:'2024', rating:'8.4', runtime:'6 ep × 50min', desc:'Kriminalistički triler bez daha' },
+  { id:'t2', genres:['thriller','drama'], title:'Povjerenstvo', emoji:'⚖️', bg:'#080c10', year:'2023', rating:'8.0', runtime:'2h 12m', desc:'Politički triler s neočekivanim krajem' },
+];
+
+const HISTORY_POOL = [
+  { id:'h_a', genres:['action','sci_fi'], title:'Misija nemoguća', emoji:'💣', bg:'#2a0a0a' },
+  { id:'h_b', genres:['comedy'], title:'Brooklyn 99', emoji:'👮', bg:'#2a1800' },
+  { id:'h_c', genres:['drama'], title:'Igra prijestolja', emoji:'👑', bg:'#12091a' },
+  { id:'h_d', genres:['sci_fi'], title:'Black Mirror', emoji:'📺', bg:'#020a14' },
+  { id:'h_e', genres:['romance'], title:'To All the Boys', emoji:'💌', bg:'#200010' },
+  { id:'h_f', genres:['docu'], title:'Our Planet', emoji:'🌍', bg:'#001810' },
+  { id:'h_g', genres:['anime'], title:'Attack on Titan', emoji:'⚔️', bg:'#1a0804' },
+  { id:'h_h', genres:['thriller'], title:'Mindhunter', emoji:'🔦', bg:'#060606' },
+  { id:'h_i', genres:['comedy','romance'], title:'Friends', emoji:'☕', bg:'#1e1000' },
+  { id:'h_j', genres:['action'], title:'John Wick', emoji:'🐶', bg:'#1a0000' },
+  { id:'h_k', genres:['horror'], title:'Haunting of Hill House', emoji:'👻', bg:'#060606' },
+  { id:'h_l', genres:['sci_fi','docu'], title:'Cosmos', emoji:'🌌', bg:'#010810' },
+];
+
+let selectedGenres = new Set();
+let watchedHistory = new Set();
+let currentStep = 0;
+
+function init() {
+  renderGenres();
+  renderHistory();
+}
+
+function renderGenres() {
+  document.getElementById('genreGrid').innerHTML = GENRES.map(g => `
+    <div class="genre-card" style="background:${g.bg}" id="genre_${g.id}" onclick="toggleGenre('${g.id}', this)">
+      <div class="genre-emoji">${g.emoji}</div>
+      <div class="genre-name" style="color:${g.color}">${g.name}</div>
+    </div>
+  `).join('');
+}
+
+function toggleGenre(id, el) {
+  if (selectedGenres.has(id)) {
+    selectedGenres.delete(id);
+    el.classList.remove('selected');
+  } else {
+    selectedGenres.add(id);
+    el.classList.add('selected');
+  }
+  document.getElementById('btnStep1').disabled = selectedGenres.size < 2;
+}
+
+function renderHistory() {
+  document.getElementById('historyGrid').innerHTML = HISTORY_POOL.map(h => `
+    <div class="history-card" id="hist_${h.id}" onclick="toggleHistory('${h.id}', this)">
+      <div class="hcard-img" style="background:${h.bg}">${h.emoji}</div>
+      <div class="hcard-title">${h.title}</div>
+    </div>
+  `).join('');
+}
+
+function toggleHistory(id, el) {
+  if (watchedHistory.has(id)) {
+    watchedHistory.delete(id);
+    el.classList.remove('watched');
+  } else {
+    watchedHistory.add(id);
+    el.classList.add('watched');
+  }
+}
+
+function goStep(n) {
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+  document.getElementById(`dot${currentStep}`).classList.remove('active');
+  document.getElementById(`dot${currentStep}`).classList.add('done');
+  if (n < currentStep) {
+    document.getElementById(`dot${n}`).classList.remove('done');
+  }
+  currentStep = n;
+  document.getElementById(`step${n}`).classList.add('active');
+  document.getElementById(`dot${n}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function computeScores() {
+  const genreScores = {};
+  GENRES.forEach(g => genreScores[g.id] = 0);
+
+  selectedGenres.forEach(gid => genreScores[gid] += 40);
+
+  watchedHistory.forEach(hid => {
+    const h = HISTORY_POOL.find(x => x.id === hid);
+    if (h) h.genres.forEach(g => { if (genreScores[g] !== undefined) genreScores[g] += 20; });
+  });
+
+  return genreScores;
+}
+
+function generateRecs() {
+  const scores = computeScores();
+
+  // Score each title
+  const scored = CATALOG.map(item => {
+    let score = 0;
+    item.genres.forEach(g => score += scores[g] || 0);
+    score += Math.random() * 10; // slight randomness
+    const matchPct = Math.min(Math.round(score / (Math.max(...Object.values(scores)) * item.genres.length) * 100), 99);
+    return { ...item, score, matchPct };
+  }).sort((a,b) => b.score - a.score);
+
+  // Build analysis
+  const topGenres = [...selectedGenres].map(gid => {
+    const g = GENRES.find(x => x.id === gid);
+    return { ...g, score: scores[gid] };
+  }).sort((a,b) => b.score - a.score).slice(0, 4);
+
+  const watchCount = watchedHistory.size;
+
+  document.getElementById('analysisGrid').innerHTML = [
+    ...topGenres.map(g => `<div class="analysis-item"><div class="ai-emoji">${g.emoji}</div><div class="ai-label">${g.name}</div><div class="ai-score">${g.score}pt</div></div>`),
+    `<div class="analysis-item"><div class="ai-emoji">📺</div><div class="ai-label">Gledano</div><div class="ai-score">${watchCount} naslova</div></div>`,
+    `<div class="analysis-item"><div class="ai-emoji">🎯</div><div class="ai-label">Žanrova</div><div class="ai-score">${selectedGenres.size}</div></div>`,
+  ].join('');
+
+  // Rows
+  const top = scored.slice(0, 4);
+  const byGenre = {};
+  [...selectedGenres].forEach(gid => {
+    const g = GENRES.find(x => x.id === gid);
+    byGenre[gid] = { genre: g, items: scored.filter(s => s.genres.includes(gid)).slice(0, 4) };
+  });
+
+  let html = '';
+
+  // Top picks row
+  html += `<div class="recs-section"><div class="recs-row-title">⭐ Naši top prijedlozi za tebe <span class="badge">AI odabir</span></div><div class="rec-row">`;
+  top.forEach(item => { html += renderRecCard(item); });
+  html += `</div></div>`;
+
+  // Per-genre rows
+  Object.values(byGenre).forEach(({ genre, items }) => {
+    if (!items.length) return;
+    html += `<div class="recs-section"><div class="recs-row-title">${genre.emoji} Jer voliš ${genre.name}</div><div class="rec-row">`;
+    items.forEach(item => { html += renderRecCard(item); });
+    html += `</div></div>`;
+  });
+
+  document.getElementById('recsContainer').innerHTML = html;
+
+  // Why panel
+  const topTitle = top[0];
+  const topGenreNames = [...selectedGenres].map(g => GENRES.find(x=>x.id===g)?.name).filter(Boolean).join(', ');
+  document.getElementById('whyPanel').innerHTML = `
+    🤖 <b>Zašto baš ovi naslovi?</b><br>
+    Na temelju tvojih preferencija (<b>${topGenreNames}</b>) i ${watchCount > 0 ? `${watchCount} gledanih naslova` : 'odabranih žanrova'}, 
+    algoritam je izračunao ocjenu podudarnosti za svih ${CATALOG.length} naslova u katalogu. 
+    <b>${topTitle.title}</b> dobio/la je najvišu ocjenu (${topTitle.matchPct}%) jer se poklapa s tvojim primarnim žanrovima. 
+    Netflix radi isto — ali s <b>milijardama podatkovnih točaka</b> od stotina milijuna korisnika, na osnovu čega kontinuirano personalizira iskustvo za svakog gledatelja.
+  `;
+
+  goStep(2);
+}
+
+function renderRecCard(item) {
+  const matchClass = item.matchPct >= 80 ? 'high' : item.matchPct >= 60 ? 'mid' : 'low';
+  const genreNames = item.genres.map(g => GENRES.find(x=>x.id===g)?.name || g).join(' · ');
+  const genreColor = GENRES.find(g => g.id === item.genres[0])?.color || '#888';
+  return `
+    <div class="rec-card">
+      <div class="rc-thumb" style="background:${item.bg}">
+        <span>${item.emoji}</span>
+        <div class="rc-match ${matchClass}">${item.matchPct}% match</div>
+        <div class="rc-why">📍 ${item.desc}</div>
+      </div>
+      <div class="rc-info">
+        <div class="rc-title">${item.title}</div>
+        <div class="rc-meta">${item.year} · ⭐ ${item.rating} · ${item.runtime}</div>
+        <div class="rc-genre" style="background:${genreColor}22;color:${genreColor}">${genreNames}</div>
+      </div>
+    </div>
+  `;
+}
+
+init();
+</script>
+</body>
+</html>

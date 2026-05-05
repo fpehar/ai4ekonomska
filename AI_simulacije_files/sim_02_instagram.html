@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Algoritam – Simulacija</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --border: #dbdbdb;
+    --text: #262626;
+    --muted: #8e8e8e;
+    --ig-pink: #e1306c;
+    --ig-orange: #f77737;
+    --ig-purple: #833ab4;
+    --ig-grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    --explore-bg: #f0f0f0;
+    --accent: #0095f6;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .ig-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 500;
+    background: var(--ig-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .topbar-info { flex: 1; font-size: 0.8rem; color: var(--muted); }
+  .topbar-info strong { color: var(--text); }
+
+  /* EXPLAINER */
+  .explainer {
+    background: linear-gradient(135deg, #fff0f7 0%, #f0f0ff 100%);
+    border-bottom: 2px solid var(--ig-pink);
+    padding: 14px 20px;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  .explainer strong { color: var(--ig-purple); }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .exp-tag {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    color: var(--text);
+  }
+  .exp-tag b { color: var(--ig-pink); }
+
+  /* STORIES BAR */
+  .stories-wrap {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stories-wrap::-webkit-scrollbar { display: none; }
+  .story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .story-item:hover { transform: scale(1.08); }
+  .story-ring {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    padding: 3px;
+    background: var(--ig-grad);
+  }
+  .story-ring.seen { background: var(--border); }
+  .story-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--explore-bg);
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+  }
+  .story-name { font-size: 0.68rem; color: var(--text); max-width: 62px; text-align: center; }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    padding: 20px 16px;
+  }
+
+  /* FEED */
+  .feed-col { flex: 1; min-width: 0; max-width: 500px; }
+
+  .post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .post-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--explore-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .post-username { font-size: 0.85rem; font-weight: 600; }
+  .post-tag {
+    font-size: 0.7rem;
+    color: white;
+    background: var(--ig-pink);
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin-left: auto;
+  }
+  .post-tag.recommended { background: var(--accent); }
+
+  .post-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    position: relative;
+  }
+  .post-score-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-family: 'DM Mono', monospace;
+    backdrop-filter: blur(4px);
+  }
+
+  .post-actions {
+    display: flex;
+    gap: 14px;
+    padding: 12px 14px 6px;
+    align-items: center;
+  }
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.15s;
+    padding: 2px;
+  }
+  .action-btn:hover { transform: scale(1.2); }
+  .action-btn span { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .save-btn { margin-left: auto; }
+
+  .btn-like-post {
+    background: var(--ig-pink);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .btn-like-post:hover { background: #c0255c; }
+  .btn-skip-post {
+    background: var(--explore-bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .btn-skip-post:hover { background: #e0e0e0; color: var(--text); }
+
+  .post-caption {
+    padding: 4px 14px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .post-caption .hashtag { color: var(--accent); }
+  .post-caption .likes { font-weight: 700; display: block; margin-bottom: 3px; }
+  .post-interact-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 14px;
+  }
+
+  /* SIDEBAR */
+  .sidebar { width: 300px; flex-shrink: 0; }
+  .side-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: sticky;
+    top: 80px;
+  }
+  .side-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: blink 1.2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+  .interest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .int-emoji { font-size: 1.1rem; width: 26px; text-align: center; }
+  .int-info { flex: 1; }
+  .int-label { font-size: 0.82rem; font-weight: 600; }
+  .int-bar-wrap { height: 6px; background: var(--explore-bg); border-radius: 99px; margin-top: 4px; overflow: hidden; }
+  .int-bar { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  .int-pct { font-size: 0.72rem; font-family: 'DM Mono', monospace; color: var(--muted); }
+
+  .algo-note {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #fff0f7, #f0f0ff);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.78rem;
+    color: #555;
+    line-height: 1.6;
+    border: 1px solid #e0d0ef;
+  }
+  .algo-note b { color: var(--ig-purple); }
+
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .explore-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: filter 0.2s;
+    position: relative;
+  }
+  .explore-cell:hover { filter: brightness(0.85); }
+  .explore-cell .score {
+    position: absolute;
+    bottom: 3px; right: 3px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .stat { background: var(--explore-bg); border-radius: 8px; padding: 10px; text-align: center; }
+  .stat-n { font-family: 'DM Mono', monospace; font-size: 1.3rem; font-weight: 700; }
+  .stat-l { font-size: 0.68rem; color: var(--muted); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text); color: white;
+    border-radius: 10px; padding: 10px 18px;
+    font-size: 0.82rem; z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .reset-btn {
+    width: 100%; padding: 9px;
+    background: var(--explore-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .reset-btn:hover { background: var(--ig-pink); color: white; border-color: var(--ig-pink); }
+
+  @media (max-width: 700px) {
+    .main { flex-direction: column; gap: 0; padding: 0; }
+    .sidebar { width: 100%; padding: 12px; }
+    .side-panel { position: static; }
+    .feed-col { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="ig-logo">Instagram</div>
+  <div class="topbar-info"><strong>Simulacija algoritma</strong> · Lajkaj ili preskoči postove — vidi kako se feed prilagođava tvojim interesima</div>
+</div>
+
+<div class="explainer">
+  <strong>Kako Instagram odlučuje što vidiš?</strong> Algoritam analizira što lajkaš, koliko dugo gledaš, što spremaš i koje profile posjećuješ.
+  Na temelju toga gradi tvoj <strong>Interest Score</strong> — ocjenu za svaki tip sadržaja. Viši score = više tog sadržaja u feedu i Explore sekciji.
+  <div class="exp-tags">
+    <div class="exp-tag"><b>Signali:</b> lajk, spremi, komentar, vrijeme gledanja</div>
+    <div class="exp-tag"><b>Rezultat:</b> personalizirani feed i Explore</div>
+    <div class="exp-tag"><b>Ažuriranje:</b> u realnom vremenu</div>
+  </div>
+</div>
+
+<!-- Stories -->
+<div class="stories-wrap" id="storiesBar"></div>
+
+<div class="main">
+  <div class="feed-col" id="feedCol">
+    <!-- posts injected here -->
+  </div>
+
+  <div class="sidebar">
+    <!-- Explore grid -->
+    <div class="side-panel">
+      <div class="side-title"><span class="live-dot"></span> Explore – prilagođeno tebi</div>
+      <div class="explore-grid" id="exploreGrid"></div>
+      <div style="font-size:0.75rem;color:var(--muted);text-align:center">Explore se ažurira prema tvojim preferencama</div>
+    </div>
+
+    <!-- Interest panel -->
+    <div class="side-panel">
+      <div class="side-title"><span class="live-dot"></span> Tvoj Interest Score</div>
+      <div id="interestBars"></div>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-n" id="likeCount" style="color:var(--ig-pink)">0</div>
+          <div class="stat-l">Lajkova</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="skipCount" style="color:var(--muted)">0</div>
+          <div class="stat-l">Preskočeno</div>
+        </div>
+      </div>
+
+      <div class="algo-note" id="algoNote">
+        Interesiraj se s postovima gore kako bi vidio/la kako Instagram uči tvoje preferencije.
+      </div>
+      <button class="reset-btn" onclick="resetAll()">↺ Resetiraj profil</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = [
+  { id:'putovanje', label:'Putovanje',     emoji:'✈️',  color:'#0ea5e9', bg:'#e0f5ff' },
+  { id:'fitness',   label:'Fitness',       emoji:'💪',  color:'#22c55e', bg:'#e8fce8' },
+  { id:'moda',      label:'Moda',          emoji:'👗',  color:'#ec4899', bg:'#fce8f3' },
+  { id:'hrana',     label:'Hrana',         emoji:'🍕',  color:'#f97316', bg:'#fff3e8' },
+  { id:'tech',      label:'Tehnologija',   emoji:'💻',  color:'#8b5cf6', bg:'#f0e8ff' },
+  { id:'priroda',   label:'Priroda',       emoji:'🌿',  color:'#16a34a', bg:'#e8f8e8' },
+];
+
+const POSTS = [
+  { cat:'putovanje', user:'@travel_vibes_hr', avatar:'✈️', img:'🏖️', bg:'#dbeafe', caption:'Ljetovanje u Dubrovniku — top 5 mjesta koja moraš posjetiti!', likes:'4.2K', hashtags:'#dubrovnik #travel #croatia' },
+  { cat:'putovanje', user:'@world_wanderer', avatar:'🌍', img:'⛰️', bg:'#e0f2fe', caption:'Trekking u Alpama — iskustvo koje mijenja perspektivu', likes:'8.7K', hashtags:'#alps #hiking #adventure' },
+  { cat:'fitness', user:'@fitnessking_hr', avatar:'🏋️', img:'💪', bg:'#dcfce7', caption:'Morning workout routine koja daje rezultate za 4 tjedna', likes:'6.1K', hashtags:'#fitness #workout #health' },
+  { cat:'fitness', user:'@yoga_with_ana', avatar:'🧘', img:'🧘', bg:'#d1fae5', caption:'10 minuta jutranje yoge = produktivan dan. Probajte!', likes:'3.4K', hashtags:'#yoga #wellness #morning' },
+  { cat:'moda', user:'@fashion_zg', avatar:'👗', img:'👠', bg:'#fce7f3', caption:'Outfit of the day — kombinacija koja ne izlazi iz mode nikad', likes:'12K', hashtags:'#ootd #fashion #style' },
+  { cat:'moda', user:'@minimalist_closet', avatar:'🤍', img:'👔', bg:'#fdf2f8', caption:'Capsule wardrobe — 20 komada, 100 kombinacija', likes:'5.6K', hashtags:'#minimalism #capsulewardrobe' },
+  { cat:'hrana', user:'@foodie_split', avatar:'🍽️', img:'🍝', bg:'#fff7ed', caption:'Pasta iz ruke — recept koji svi traže', likes:'9.3K', hashtags:'#food #pasta #homecooking' },
+  { cat:'hrana', user:'@zdravahrana_hr', avatar:'🥗', img:'🥑', bg:'#fef9c3', caption:'5 brzih obroka ispod 500 cal — s receptima u biou!', likes:'7.8K', hashtags:'#healthyfood #avocado #mealprep' },
+  { cat:'tech', user:'@tech_review_hr', avatar:'📱', img:'💻', bg:'#ede9fe', caption:'Testirao sam ChatGPT 4o — evo što me iznenadilo', likes:'15K', hashtags:'#tech #ai #chatgpt' },
+  { cat:'tech', user:'@coding_life', avatar:'👨‍💻', img:'🖥️', bg:'#e0e7ff', caption:'5 VS Code ekstenzija koje svaki programer mora imati', likes:'11K', hashtags:'#coding #programming #vscode' },
+  { cat:'priroda', user:'@nature_hrvatska', avatar:'🌳', img:'🌲', bg:'#dcfce7', caption:'Plitvička jezera — svaki godišnji dio iznova oduševljava', likes:'22K', hashtags:'#plitvice #nature #croatia' },
+  { cat:'priroda', user:'@green_living_hr', avatar:'🌱', img:'🌿', bg:'#d1fae5', caption:'Kako smanjiti plastiku u kućanstvu — 10 jednostavnih koraka', likes:'6.2K', hashtags:'#zerowaste #ecofriendly #nature' },
+];
+
+const STORIES = [
+  { user:'ana_travels', emoji:'🏖️', cat:'putovanje' },
+  { user:'fitlife_zg', emoji:'🏋️', cat:'fitness' },
+  { user:'modarules', emoji:'👗', cat:'moda' },
+  { user:'chef_ivan', emoji:'🍕', cat:'hrana' },
+  { user:'techbro_hr', emoji:'💻', cat:'tech' },
+  { user:'planinarhr', emoji:'🌿', cat:'priroda' },
+  { user:'travel_duo', emoji:'✈️', cat:'putovanje' },
+  { user:'yoga_mar', emoji:'🧘', cat:'fitness' },
+];
+
+const EXPLORE_ITEMS = [
+  { cat:'putovanje', emoji:'🏝️', bg:'#bfdbfe' },
+  { cat:'fitness', emoji:'🏃', bg:'#bbf7d0' },
+  { cat:'moda', emoji:'💄', bg:'#fbcfe8' },
+  { cat:'hrana', emoji:'🍜', bg:'#fed7aa' },
+  { cat:'tech', emoji:'📱', bg:'#ddd6fe' },
+  { cat:'priroda', emoji:'🦋', bg:'#bbf7d0' },
+  { cat:'putovanje', emoji:'🗺️', bg:'#bfdbfe' },
+  { cat:'moda', emoji:'👒', bg:'#fbcfe8' },
+  { cat:'fitness', emoji:'🥊', bg:'#bbf7d0' },
+];
+
+let interests = {};
+CATS.forEach(c => interests[c.id] = 10);
+let likes = 0, skips = 0, shownPosts = [];
+
+function init() {
+  renderStories();
+  renderFeed();
+  renderExplore();
+  renderInterestBars();
+}
+
+function renderStories() {
+  document.getElementById('storiesBar').innerHTML = STORIES.map((s, i) => `
+    <div class="story-item" onclick="storyClick('${s.cat}', this)">
+      <div class="story-ring">
+        <div class="story-inner">${s.emoji}</div>
+      </div>
+      <div class="story-name">${s.user}</div>
+    </div>
+  `).join('');
+}
+
+function storyClick(catId, el) {
+  el.querySelector('.story-ring').classList.add('seen');
+  interests[catId] = Math.min(interests[catId] * 1.3 + 5, 100);
+  renderInterestBars();
+  renderExplore();
+  showToast('Story pogledana – algoritam bilježi!');
+}
+
+function getWeightedFeed() {
+  const pool = POSTS.filter(p => !shownPosts.find(s => s.user === p.user));
+  if (pool.length < 3) { shownPosts = []; return getWeightedFeed(); }
+
+  const sorted = [...pool].sort((a, b) => {
+    const ia = interests[a.cat] + Math.random() * 5;
+    const ib = interests[b.cat] + Math.random() * 5;
+    return ib - ia;
+  });
+  return sorted.slice(0, 4);
+}
+
+function renderFeed() {
+  const posts = getWeightedFeed();
+  shownPosts.push(...posts);
+  const container = document.getElementById('feedCol');
+  container.innerHTML = '';
+
+  posts.forEach((p, i) => {
+    const cat = CATS.find(c => c.id === p.cat);
+    const total = Object.values(interests).reduce((a,b)=>a+b,0);
+    const score = Math.round((interests[p.cat]/total)*100);
+    const isTop = score >= 25;
+
+    const div = document.createElement('div');
+    div.className = 'post-card';
+    div.style.animationDelay = `${i*0.08}s`;
+    div.innerHTML = `
+      <div class="post-header">
+        <div class="post-avatar">${p.avatar}</div>
+        <div>
+          <div class="post-username">${p.user}</div>
+          <div style="font-size:0.72rem;color:var(--muted)">Preporučeno za tebe · ${cat.emoji} ${cat.label}</div>
+        </div>
+        <div class="post-tag ${isTop ? 'recommended' : ''}">${isTop ? '⭐ Top pick' : '📍 Suggested'}</div>
+      </div>
+      <div class="post-image" style="background:${p.bg}">
+        <span style="font-size:5rem">${p.img}</span>
+        <div class="post-score-badge">Interest score: ${score}%</div>
+      </div>
+      <div class="post-caption">
+        <span class="likes">❤️ ${p.likes} sviđanja</span>
+        ${p.caption} <span class="hashtag">${p.hashtags}</span>
+      </div>
+      <div class="post-interact-row">
+        <button class="btn-like-post" onclick="interactPost('like','${p.cat}',this)">❤️ Sviđa mi se</button>
+        <button class="btn-skip-post" onclick="interactPost('skip','${p.cat}',this)">Preskoči ↓</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function interactPost(action, catId, btn) {
+  const card = btn.closest('.post-card');
+
+  if (action === 'like') {
+    likes++;
+    interests[catId] = Math.min(interests[catId] * 1.5 + 10, 100);
+    CATS.forEach(c => { if (c.id !== catId) interests[c.id] = Math.max(interests[c.id] * 0.97, 1); });
+    showToast(`❤️ Lajkano! Više ${CATS.find(c=>c.id===catId).label} sadržaja u feedu`);
+    updateAlgoNote('like', catId);
+  } else {
+    skips++;
+    interests[catId] = Math.max(interests[catId] * 0.65, 1);
+    showToast(`↓ Preskočeno — algoritam smanjuje prioritet`);
+    updateAlgoNote('skip', catId);
+  }
+
+  card.style.transition = 'all 0.3s';
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    card.remove();
+    if (document.querySelectorAll('.post-card').length === 0) {
+      renderFeed();
+    }
+  }, 280);
+
+  document.getElementById('likeCount').textContent = likes;
+  document.getElementById('skipCount').textContent = skips;
+  renderInterestBars();
+  renderExplore();
+}
+
+function renderInterestBars() {
+  const total = Object.values(interests).reduce((a,b)=>a+b,0);
+  const sorted = [...CATS].sort((a,b) => interests[b.id]-interests[a.id]);
+
+  document.getElementById('interestBars').innerHTML = sorted.map(cat => {
+    const pct = Math.round((interests[cat.id]/total)*100);
+    return `
+      <div class="interest-item">
+        <div class="int-emoji">${cat.emoji}</div>
+        <div class="int-info">
+          <div class="int-label" style="color:${cat.color}">${cat.label}</div>
+          <div class="int-bar-wrap"><div class="int-bar" style="width:${pct}%;background:${cat.color}"></div></div>
+        </div>
+        <div class="int-pct">${pct}%</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderExplore() {
+  const total = Object.values(interests).reduce((a,b)=>a+b,0);
+  const sorted = EXPLORE_ITEMS.slice().sort((a,b) => {
+    return (interests[b.cat]/total) - (interests[a.cat]/total);
+  });
+
+  document.getElementById('exploreGrid').innerHTML = sorted.map(item => {
+    const pct = Math.round((interests[item.cat]/total)*100);
+    return `
+      <div class="explore-cell" style="background:${item.bg};font-size:2.2rem">
+        ${item.emoji}
+        <div class="score">${pct}%</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateAlgoNote(action, catId) {
+  const cat = CATS.find(c => c.id === catId);
+  const total = Object.values(interests).reduce((a,b)=>a+b,0);
+  const topCat = [...CATS].sort((a,b) => interests[b.id]-interests[a.id])[0];
+  const topPct = Math.round((interests[topCat.id]/total)*100);
+
+  const notes = {
+    like: `Lajkao/la si <b>${cat.label}</b>. Instagram povećava <b>Interest Score</b> za tu kategoriju. Sada tvoj feed prioritizira <b>${topCat.emoji} ${topCat.label}</b> — ${topPct}% svih prijedloga.`,
+    skip: `Preskočio/la si <b>${cat.label}</b>. Score pada i algoritam traži što te više zanima. Explore sekcija se odmah ažurira.`
+  };
+  document.getElementById('algoNote').innerHTML = notes[action];
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function resetAll() {
+  CATS.forEach(c => interests[c.id] = 10);
+  likes = 0; skips = 0; shownPosts = [];
+  document.getElementById('likeCount').textContent = 0;
+  document.getElementById('skipCount').textContent = 0;
+  document.getElementById('algoNote').innerHTML = 'Interesiraj se s postovima gore kako bi vidio/la kako Instagram uči tvoje preferencije.';
+  renderFeed(); renderExplore(); renderInterestBars();
+}
+
+init();
+</script>
+</body>
+</html>

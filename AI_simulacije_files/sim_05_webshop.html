@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Preporuke Proizvoda – Simulacija</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #fff;
+    --bg2: #f7f8fa;
+    --surface: #fff;
+    --border: #eaecef;
+    --text: #111827;
+    --muted: #6b7280;
+    --brand: #7c3aed;
+    --brand-l: #f5f3ff;
+    --brand-d: #5b21b6;
+    --accent: #059669;
+    --orange: #d97706;
+    --red: #dc2626;
+    --gold: #f59e0b;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* TOP HEADER */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .shop-name { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+  .shop-name span { color: var(--brand); }
+  .search-bar {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 400px;
+  }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 0.83rem; color: var(--muted); }
+  .ai-badge-top {
+    background: var(--brand);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pulse { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: p 1.5s infinite; }
+  @keyframes p { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+  /* EXPLAINER */
+  .explainer {
+    background: linear-gradient(135deg, #f5f3ff, #fdf2f8);
+    border-bottom: 2px solid var(--brand);
+    padding: 14px 24px;
+    font-size: 0.83rem;
+    color: #444;
+    line-height: 1.6;
+  }
+  .explainer strong { color: var(--brand); }
+  .exp-steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .es { background: white; border: 1px solid #ddd6fe; border-radius: 20px; padding: 3px 12px; font-size: 0.76rem; }
+  .es b { color: var(--brand); }
+
+  /* LAYOUT */
+  .page { max-width: 1100px; margin: 0 auto; display: flex; gap: 0; }
+
+  /* LEFT FILTERS */
+  .filters {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 20px 16px;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .filter-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'Fira Code', monospace;
+    margin-bottom: 10px;
+    margin-top: 16px;
+  }
+  .filter-title:first-child { margin-top: 0; }
+
+  .filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: all 0.15s;
+    border: 1.5px solid transparent;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .filter-chip:hover { background: var(--brand-l); }
+  .filter-chip.active { background: var(--brand-l); border-color: var(--brand); color: var(--brand); font-weight: 600; }
+  .filter-chip.active::after { content: '✓'; position: absolute; right: 8px; font-size: 0.8rem; color: var(--brand); }
+  .filter-emoji { font-size: 1rem; }
+
+  .ai-profile-box {
+    background: var(--brand-l);
+    border: 1px solid #ddd6fe;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: #5b21b6;
+    line-height: 1.6;
+  }
+  .ai-profile-box .ap-title { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; color: var(--brand); }
+
+  /* CONTENT */
+  .content { flex: 1; padding: 20px; min-width: 0; }
+
+  /* USER JOURNEY STRIP */
+  .journey-strip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 0;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .journey-strip::-webkit-scrollbar { display: none; }
+  .journey-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  .journey-step:hover { background: #ede9fe; }
+  .journey-step.current { background: #ede9fe; }
+  .j-emoji { font-size: 1.2rem; }
+  .j-label { font-size: 0.66rem; color: var(--muted); white-space: nowrap; }
+  .j-arrow { color: var(--border); font-size: 1rem; margin: 0 2px; flex-shrink: 0; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .sh-title { font-weight: 700; font-size: 1rem; }
+  .sh-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .sh-badge.ai { background: #ede9fe; color: var(--brand); }
+  .sh-badge.popular { background: #fef3c7; color: var(--orange); }
+  .sh-badge.new { background: #d1fae5; color: var(--accent); }
+  .sh-why {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--brand);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* PRODUCT GRID */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .prod-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--surface);
+  }
+  .prod-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-color: var(--brand); }
+  .prod-card.ai-pick { border-color: var(--brand); }
+
+  .pc-thumb {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+  }
+  .ai-match-pill {
+    position: absolute;
+    top: 8px; left: 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+  }
+  .ai-match-pill.high { background: var(--brand); color: white; }
+  .ai-match-pill.mid { background: var(--orange); color: white; }
+  .ai-match-pill.low { background: #e5e7eb; color: var(--muted); }
+
+  .why-pill {
+    position: absolute;
+    bottom: 6px; left: 6px; right: 6px;
+    background: rgba(124,58,237,0.88);
+    color: white;
+    font-size: 0.62rem;
+    padding: 4px 7px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(3px);
+    line-height: 1.4;
+  }
+  .prod-card:hover .why-pill { opacity: 1; }
+
+  .pc-info { padding: 10px; }
+  .pc-name { font-size: 0.8rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+  .pc-price-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .pc-price { font-weight: 700; font-size: 0.92rem; color: var(--text); }
+  .pc-old { font-size: 0.72rem; color: var(--muted); text-decoration: line-through; }
+  .pc-discount { font-size: 0.68rem; color: var(--red); font-weight: 700; }
+  .pc-rating { font-size: 0.7rem; color: var(--muted); }
+  .pc-add {
+    width: 100%;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 7px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    cursor: pointer;
+    margin-top: 7px;
+    transition: all 0.15s;
+  }
+  .pc-add:hover { background: var(--brand-d); }
+
+  /* BEHAVIOUR LOG */
+  .behaviour-panel {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    width: 280px;
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 12px;
+    padding: 14px;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .bp-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: #4ade80;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bp-log {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: #9ca3af;
+    line-height: 1.8;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+  .bp-log .k { color: #60a5fa; }
+  .bp-log .v { color: #4ade80; }
+  .bp-toggle { font-size: 0.72rem; color: #6b7280; text-align: right; cursor: pointer; margin-top: 6px; }
+
+  .toast {
+    position: fixed; top: 70px; right: 16px;
+    background: #111; color: white;
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 0.82rem; z-index: 999;
+    transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 240px; line-height: 1.4;
+  }
+  .toast.show { transform: translateX(0); }
+
+  @media (max-width: 700px) {
+    .filters { display: none; }
+    .behaviour-panel { width: calc(100vw - 32px); right: 16px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="shop-name">Moda<span>AI</span></div>
+  <input class="search-bar" type="text" placeholder="🔍 Pretraži 50.000+ proizvoda..." readonly>
+  <div class="topbar-right">
+    <div class="ai-badge-top"><div class="pulse"></div>AI preporuke aktivne</div>
+    🛒 0
+  </div>
+</div>
+
+<div class="explainer">
+  <strong>Kako AI web shop preporučuje proizvode?</strong> Algoritam prati svaki tvoj klik, koliko dugo gledaš proizvod, što dodaješ u wishlistu i povijest kupnje. 
+  Na temelju toga gradi <strong>profil korisnika</strong> i sortira prikaz cijelog dućana prema tvojim preferencijama — drugačiji od svakog drugog korisnika.
+  <div class="exp-steps">
+    <div class="es"><b>Klikni</b> na kategoriju ili proizvod</div>
+    <div class="es"><b>AI profil</b> se ažurira u realnom vremenu</div>
+    <div class="es"><b>Preporuke</b> se mijenjaju odmah</div>
+  </div>
+</div>
+
+<div class="page">
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-title">Kategorije</div>
+
+    <div class="filter-chip" id="f_odijela" onclick="clickFilter('odijela','👔 Odijela i košulje')">
+      <span class="filter-emoji">👔</span> Odijela
+    </div>
+    <div class="filter-chip" id="f_casual" onclick="clickFilter('casual','👕 Casual odjeća')">
+      <span class="filter-emoji">👕</span> Casual
+    </div>
+    <div class="filter-chip" id="f_sport" onclick="clickFilter('sport','🏃 Sportska odjeća')">
+      <span class="filter-emoji">🏃</span> Sportska
+    </div>
+    <div class="filter-chip" id="f_cipele" onclick="clickFilter('cipele','👞 Cipele')">
+      <span class="filter-emoji">👞</span> Cipele
+    </div>
+    <div class="filter-chip" id="f_torbice" onclick="clickFilter('torbice','👜 Torbice')">
+      <span class="filter-emoji">👜</span> Torbice
+    </div>
+    <div class="filter-chip" id="f_dodaci" onclick="clickFilter('dodaci','💍 Dodaci')">
+      <span class="filter-emoji">💍</span> Dodaci
+    </div>
+
+    <div class="filter-title">Stil</div>
+    <div class="filter-chip" id="f_minimalist" onclick="clickFilter('minimalist','🤍 Minimalist')">
+      <span class="filter-emoji">🤍</span> Minimalist
+    </div>
+    <div class="filter-chip" id="f_street" onclick="clickFilter('street','🧢 Streetwear')">
+      <span class="filter-emoji">🧢</span> Streetwear
+    </div>
+    <div class="filter-chip" id="f_business" onclick="clickFilter('business','💼 Business')">
+      <span class="filter-emoji">💼</span> Business
+    </div>
+
+    <div class="ai-profile-box" id="aiProfileBox">
+      <div class="ap-title">🤖 Tvoj AI profil</div>
+      Još nema dovoljno podataka. Klikni na kategorije ili proizvode.
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Journey -->
+    <div class="journey-strip" id="journeyStrip">
+      <div class="journey-step current"><div class="j-emoji">🏠</div><div class="j-label">Početna</div></div>
+    </div>
+
+    <!-- AI Recommendations -->
+    <div id="mainContent">
+      <!-- Section: For You -->
+      <div class="section-header">
+        <div class="sh-title">Za tebe</div>
+        <div class="sh-badge ai">🤖 AI odabir</div>
+        <div class="sh-why" onclick="showWhy()">Zašto ovo?</div>
+      </div>
+      <div class="product-grid" id="forYouGrid"></div>
+
+      <!-- Section: Trending -->
+      <div class="section-header">
+        <div class="sh-title">Trending ovaj tjedan</div>
+        <div class="sh-badge popular">🔥 Popularno</div>
+      </div>
+      <div class="product-grid" id="trendingGrid"></div>
+
+      <!-- Section: Viewed -->
+      <div class="section-header" id="viewedHeader" style="display:none">
+        <div class="sh-title">Nedavno gledano</div>
+        <div class="sh-badge new">👀 Pregledano</div>
+      </div>
+      <div class="product-grid" id="viewedGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Behaviour panel -->
+<div class="behaviour-panel">
+  <div class="bp-title"><div class="pulse"></div> AI Praćenje ponašanja</div>
+  <div class="bp-log" id="bpLog">
+    <div>→ <span class="k">session</span>: <span class="v">"new_user"</span></div>
+    <div>→ <span class="k">profile</span>: <span class="v">"building..."</span></div>
+  </div>
+  <div class="bp-toggle" onclick="togglePanel()">▼ Sakrij / prikaži</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ALL_PRODUCTS = [
+  // Odijela
+  { id:'od1', cat:'odijela', style:'business', name:'Hugo Boss Slim Fit Odijelo', emoji:'👔', bg:'#f3f4f6', price:'299,99', old:'399,99', disc:'-25%', rating:'4.9 ⭐ (182)', why:'Gledao/la si poslovnu kategoriju' },
+  { id:'od2', cat:'odijela', style:'business', name:'Massimo Dutti Sako', emoji:'🧥', bg:'#f1f5f9', price:'189,99', rating:'4.7 ⭐ (94)', why:'Odgovara poslovnom stilu' },
+  { id:'od3', cat:'odijela', style:'business minimalist', name:'COS Bijela Košulja', emoji:'👕', bg:'#f8fafc', price:'79,99', rating:'4.8 ⭐ (231)', why:'Minimalistički stil koji preferiraš' },
+  // Casual
+  { id:'ca1', cat:'casual', style:'street casual', name:'Levi\'s 501 Jeans', emoji:'👖', bg:'#dbeafe', price:'89,99', old:'119,99', disc:'-25%', rating:'4.9 ⭐ (445)', why:'Best seller u casual kategoriji' },
+  { id:'ca2', cat:'casual', style:'minimalist casual', name:'Uniqlo UT Majica', emoji:'👕', bg:'#f0fdf4', price:'19,99', rating:'4.6 ⭐ (334)', why:'Minimalistički dizajn koji voliš' },
+  { id:'ca3', cat:'casual', style:'street', name:'Nike Hoodie Club Fleece', emoji:'🧥', bg:'#fef3c7', price:'69,99', rating:'4.7 ⭐ (198)', why:'Streetwear stil koji slijediš' },
+  { id:'ca4', cat:'casual', style:'casual', name:'Zara Floral Haljina', emoji:'👗', bg:'#fdf2f8', price:'49,99', rating:'4.5 ⭐ (167)', why:'Trendy casual odabir' },
+  // Sport
+  { id:'sp1', cat:'sport', style:'sport', name:'Nike Dri-FIT Pro Set', emoji:'🏃', bg:'#dcfce7', price:'79,99', rating:'4.8 ⭐ (312)', why:'Top izbor za sport' },
+  { id:'sp2', cat:'sport', style:'sport', name:'Adidas Yoga Tajice', emoji:'🧘', bg:'#e0e7ff', price:'59,99', old:'79,99', disc:'-25%', rating:'4.9 ⭐ (256)', why:'Aktualni best seller' },
+  // Cipele
+  { id:'ci1', cat:'cipele', style:'casual minimalist', name:'New Balance 574', emoji:'👟', bg:'#f0f4ff', price:'109,99', rating:'4.9 ⭐ (523)', why:'Kultna tenisica za svaki dan' },
+  { id:'ci2', cat:'cipele', style:'business', name:'Oxford Kožne Cipele', emoji:'👞', bg:'#f5f0eb', price:'139,99', rating:'4.7 ⭐ (89)', why:'Savršene uz business odijela' },
+  { id:'ci3', cat:'cipele', style:'street', name:'Jordan 1 Retro High', emoji:'🏀', bg:'#fff0e8', price:'179,99', rating:'5.0 ⭐ (712)', why:'Streetwear ikona' },
+  // Torbice
+  { id:'to1', cat:'torbice', style:'business minimalist', name:'Longchamp Le Pliage', emoji:'👜', bg:'#fdf4ff', price:'149,99', rating:'4.8 ⭐ (201)', why:'Elegantan i funkcionalan' },
+  { id:'to2', cat:'torbice', style:'street casual', name:'Supreme Backpack', emoji:'🎒', bg:'#fff0f0', price:'89,99', rating:'4.6 ⭐ (143)', why:'Popularan u streetwear' },
+  // Dodaci
+  { id:'do1', cat:'dodaci', style:'minimalist', name:'Daniel Wellington Sat', emoji:'⌚', bg:'#fafaf5', price:'199,99', rating:'4.8 ⭐ (334)', why:'Minimalistički dizajn' },
+  { id:'do2', cat:'dodaci', style:'casual', name:'Ray-Ban Sunčane Naočale', emoji:'🕶️', bg:'#fffbe6', price:'139,99', old:'179,99', disc:'-22%', rating:'4.9 ⭐ (512)', why:'Vječni klasik' },
+];
+
+// State
+let clickedCats = {};
+let viewedProducts = [];
+let cartCount = 0;
+let panelOpen = true;
+
+function getTopStyles() {
+  const styleCounts = {};
+  Object.entries(clickedCats).forEach(([cat, count]) => {
+    const prods = ALL_PRODUCTS.filter(p => p.cat === cat);
+    prods.forEach(p => p.style.split(' ').forEach(s => {
+      styleCounts[s] = (styleCounts[s] || 0) + count;
+    }));
+  });
+  return Object.entries(styleCounts).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([s])=>s);
+}
+
+function scoreProduct(p) {
+  let score = Math.random() * 5;
+  if (clickedCats[p.cat]) score += clickedCats[p.cat] * 20;
+  const topStyles = getTopStyles();
+  topStyles.forEach(s => { if (p.style.includes(s)) score += 15; });
+  if (viewedProducts.includes(p.id)) score += 5;
+  return score;
+}
+
+function renderForYou() {
+  const scored = ALL_PRODUCTS.map(p => ({ ...p, score: scoreProduct(p) })).sort((a,b)=>b.score-a.score);
+  const top = scored.slice(0, 6);
+  const maxScore = top[0]?.score || 1;
+
+  document.getElementById('forYouGrid').innerHTML = top.map(p => {
+    const matchPct = Math.min(Math.round((p.score / maxScore) * 100), 99);
+    const matchClass = matchPct >= 80 ? 'high' : matchPct >= 55 ? 'mid' : 'low';
+    const isAI = matchPct >= 70;
+    return `
+      <div class="prod-card ${isAI ? 'ai-pick' : ''}" onclick="viewProduct('${p.id}', '${p.cat}', '${p.name}')">
+        <div class="pc-thumb" style="background:${p.bg}">
+          <span>${p.emoji}</span>
+          <div class="ai-match-pill ${matchClass}">🤖 ${matchPct}%</div>
+          <div class="why-pill">📍 ${p.why}</div>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-price-row">
+            <div class="pc-price">${p.price} €</div>
+            ${p.old ? `<div class="pc-old">${p.old} €</div><div class="pc-discount">${p.disc}</div>` : ''}
+          </div>
+          <div class="pc-rating">${p.rating}</div>
+          <button class="pc-add" onclick="addToCart(event,'${p.name}')">+ Košarica</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTrending() {
+  const trending = [...ALL_PRODUCTS].sort(() => Math.random() - 0.5).slice(0, 4);
+  document.getElementById('trendingGrid').innerHTML = trending.map(p => `
+    <div class="prod-card" onclick="viewProduct('${p.id}', '${p.cat}', '${p.name}')">
+      <div class="pc-thumb" style="background:${p.bg}"><span>${p.emoji}</span></div>
+      <div class="pc-info">
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-price-row">
+          <div class="pc-price">${p.price} €</div>
+          ${p.old ? `<div class="pc-old">${p.old} €</div><div class="pc-discount">${p.disc}</div>` : ''}
+        </div>
+        <div class="pc-rating">${p.rating}</div>
+        <button class="pc-add" onclick="addToCart(event,'${p.name}')">+ Košarica</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderViewed() {
+  if (!viewedProducts.length) return;
+  const viewed = viewedProducts.slice(-4).map(id => ALL_PRODUCTS.find(p=>p.id===id)).filter(Boolean);
+  document.getElementById('viewedHeader').style.display = 'flex';
+  document.getElementById('viewedGrid').innerHTML = viewed.map(p => `
+    <div class="prod-card" onclick="viewProduct('${p.id}','${p.cat}','${p.name}')">
+      <div class="pc-thumb" style="background:${p.bg}"><span>${p.emoji}</span></div>
+      <div class="pc-info">
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-price-row"><div class="pc-price">${p.price} €</div></div>
+        <div class="pc-rating">${p.rating}</div>
+        <button class="pc-add" onclick="addToCart(event,'${p.name}')">+ Košarica</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clickFilter(cat, label) {
+  clickedCats[cat] = (clickedCats[cat] || 0) + 1;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById(`f_${cat}`)?.classList.add('active');
+
+  addToJourney('🔍', label);
+  addLog([['filter_click', `"${cat}"`], ['interest_score', `+20 for "${cat}"`]]);
+  updateAIProfile();
+  renderForYou();
+  showToast(`🤖 AI ažurira preporuke za: ${label}`);
+}
+
+function viewProduct(id, cat, name) {
+  clickedCats[cat] = (clickedCats[cat] || 0) + 0.5;
+  if (!viewedProducts.includes(id)) viewedProducts.push(id);
+  addToJourney('👀', name.split(' ').slice(0,2).join(' '));
+  addLog([['product_view', `"${name.slice(0,25)}..."`], ['time_on_page', '"tracked"'], ['interest_score', `+10 for "${cat}"`]]);
+  updateAIProfile();
+  renderForYou();
+  renderViewed();
+  showToast(`👀 Pregledano: ${name.split(' ').slice(0,3).join(' ')}`);
+}
+
+function addToCart(e, name) {
+  e.stopPropagation();
+  cartCount++;
+  document.querySelector('.topbar-right').innerHTML = `<div class="ai-badge-top"><div class="pulse"></div>AI preporuke aktivne</div> 🛒 ${cartCount}`;
+  addLog([['add_to_cart', `"${name.slice(0,20)}"`], ['recommendation_used', '"true"']]);
+  showToast(`🛒 Dodano u košaricu!`);
+}
+
+function addToJourney(emoji, label) {
+  const strip = document.getElementById('journeyStrip');
+  const arrow = document.createElement('div');
+  arrow.className = 'j-arrow';
+  arrow.textContent = '›';
+  const step = document.createElement('div');
+  step.className = 'journey-step';
+  step.innerHTML = `<div class="j-emoji">${emoji}</div><div class="j-label">${label.slice(0,12)}</div>`;
+  document.querySelectorAll('.journey-step').forEach(s=>s.classList.remove('current'));
+  strip.appendChild(arrow);
+  strip.appendChild(step);
+  step.classList.add('current');
+  strip.scrollLeft = strip.scrollWidth;
+}
+
+function addLog(lines) {
+  const log = document.getElementById('bpLog');
+  lines.forEach(([k,v]) => {
+    const d = document.createElement('div');
+    d.innerHTML = `→ <span class="k">${k}</span>: <span class="v">${v}</span>`;
+    log.appendChild(d);
+  });
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateAIProfile() {
+  const cats = Object.entries(clickedCats).sort((a,b)=>b[1]-a[1]);
+  const topStyles = getTopStyles();
+  if (!cats.length) return;
+
+  document.getElementById('aiProfileBox').innerHTML = `
+    <div class="ap-title">🤖 Tvoj AI profil</div>
+    <b>Interesi:</b> ${cats.slice(0,3).map(([c]) => c).join(', ')}<br>
+    ${topStyles.length ? `<b>Stil:</b> ${topStyles.join(', ')}<br>` : ''}
+    <b>Pregledano:</b> ${viewedProducts.length} prod.<br>
+    <b>Feed:</b> sortiran prema tebi
+  `;
+}
+
+function showWhy() {
+  const cats = Object.entries(clickedCats).sort((a,b)=>b[1]-a[1]);
+  const reason = cats.length
+    ? `Jer si kliknuo/la na: ${cats.slice(0,3).map(([c])=>c).join(', ')}.`
+    : 'Još nema dovoljno podataka. Klikaj na kategorije!';
+  showToast('🤖 ' + reason);
+}
+
+function togglePanel() {
+  const log = document.getElementById('bpLog');
+  panelOpen = !panelOpen;
+  log.style.display = panelOpen ? '' : 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderForYou();
+renderTrending();
+</script>
+</body>
+</html>

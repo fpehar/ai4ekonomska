@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Email Asistent – Simulacija</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --border: #dde1e7;
+    --text: #161616;
+    --muted: #6f6f6f;
+    --brand: #0f62fe;
+    --brand-l: #edf5ff;
+    --brand-d: #0043ce;
+    --green: #198038;
+    --green-l: #defbe6;
+    --orange: #ff6b35;
+    --orange-l: #fff2ec;
+    --red: #da1e28;
+    --purple: #7c3aed;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: var(--text);
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; }
+  .logo span { color: #78a9ff; }
+  .header-info { flex: 1; font-size: 0.78rem; color: rgba(255,255,255,0.6); }
+  .header-info strong { color: white; }
+  .ai-live { background: var(--brand); color: white; font-size: 0.72rem; font-weight: 600; padding: 4px 12px; border-radius: 4px; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #42be65; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+  /* EXPLAINER */
+  .explainer {
+    background: linear-gradient(135deg, #edf5ff, #f0f4ff);
+    border-bottom: 3px solid var(--brand);
+    padding: 14px 24px;
+    font-size: 0.83rem;
+    color: #444;
+    line-height: 1.6;
+  }
+  .explainer strong { color: var(--brand); }
+  .exp-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .ep { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 0.76rem; }
+  .ep b { color: var(--brand); }
+
+  /* LAYOUT */
+  .workspace {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
+    padding: 20px 16px;
+    align-items: flex-start;
+  }
+
+  /* LEFT: INPUT PANEL */
+  .input-panel {
+    width: 340px;
+    flex-shrink: 0;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .panel-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text);
+  }
+  .sublabel { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; }
+
+  .select-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+
+  select, textarea, input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--text);
+    background: var(--surface);
+  }
+  select:focus, textarea:focus, input:focus { border-color: var(--brand); }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+  .param-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+
+  .tone-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .tone-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    background: var(--bg);
+    color: var(--muted);
+  }
+  .tone-chip:hover { border-color: var(--brand); color: var(--brand); }
+  .tone-chip.active { background: var(--brand-l); border-color: var(--brand); color: var(--brand); }
+
+  .generate-btn {
+    width: 100%;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .generate-btn:hover { background: var(--brand-d); }
+  .generate-btn.loading { opacity: 0.7; cursor: not-allowed; }
+
+  /* SCENARIO SHORTCUTS */
+  .scenario-grid { display: grid; grid-template-columns: 1fr; gap: 5px; }
+  .sc-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sc-btn:hover { background: var(--brand-l); border-color: var(--brand); color: var(--brand); }
+  .sc-icon { font-size: 1rem; }
+
+  /* RIGHT: OUTPUT PANEL */
+  .output-panel { flex: 1; min-width: 0; }
+
+  .output-placeholder {
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 2;
+  }
+  .output-placeholder .big { font-size: 3rem; display: block; margin-bottom: 10px; }
+
+  /* EMAIL PREVIEW */
+  .email-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+
+  .email-toolbar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .et-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .et-btn:hover { background: var(--brand-l); border-color: var(--brand); color: var(--brand); }
+  .et-btn.send { background: var(--brand); color: white; border-color: var(--brand); }
+  .et-btn.send:hover { background: var(--brand-d); }
+  .et-spacer { flex: 1; }
+  .version-info { font-size: 0.72rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+  .email-meta {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .em-row { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; }
+  .em-label { font-size: 0.75rem; color: var(--muted); width: 50px; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; }
+  .em-value { font-size: 0.88rem; flex: 1; }
+  .em-subject { font-weight: 700; font-size: 1rem; color: var(--text); }
+
+  .email-body {
+    padding: 20px;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 200px;
+    border: none;
+    width: 100%;
+    font-family: 'IBM Plex Sans', sans-serif;
+    resize: none;
+    outline: none;
+  }
+
+  .email-footer {
+    padding: 10px 20px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .ai-stamp { background: var(--brand-l); color: var(--brand); border-radius: 4px; padding: 2px 8px; font-size: 0.7rem; font-weight: 600; }
+
+  /* ANALYSIS PANEL */
+  .analysis-panel {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .analysis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .an-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .an-emoji { font-size: 1.6rem; display: block; margin-bottom: 5px; }
+  .an-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
+  .an-value { font-size: 0.88rem; font-weight: 700; }
+
+  .tips-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .tips-title { font-weight: 700; font-size: 0.8rem; color: var(--green); margin-bottom: 8px; }
+  .tip-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-size: 0.8rem; line-height: 1.5; color: #444; }
+
+  /* COMPARISON */
+  .comparison-panel { display: none; animation: fadeIn 0.4s ease; }
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .comp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+  .comp-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .comp-text { font-size: 0.8rem; line-height: 1.6; color: var(--muted); white-space: pre-wrap; }
+
+  @media (max-width: 720px) {
+    .workspace { flex-direction: column; padding: 12px; }
+    .input-panel { width: 100%; }
+    .comp-grid { grid-template-columns: 1fr; }
+  }
+
+  .tab-row { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 2px solid var(--border); }
+  .tab-btn {
+    padding: 9px 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+  .tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">AI<span>Mail</span> Asistent</div>
+  <div class="header-info"><strong>Simulacija AI pisanja e-mailova</strong> · Unesi namjeru, AI generira profesionalni email</div>
+  <div class="ai-live"><div class="dot"></div>AI Aktivan</div>
+</div>
+
+<div class="explainer">
+  <strong>Kako AI asistent piše poslovne e-mailove?</strong> Opisuješ samo <strong>što</strong> treba reći, a AI bira prave riječi, ton i strukturu. 
+  Analizira kontekst, primatelja i cilj — i generira email koji možeš odmah poslati ili urediti.
+  Uštedi 10-20 minuta po emailu, a ukupna komunikacija je profesionalnija.
+  <div class="exp-row">
+    <div class="ep"><b>1.</b> Opišeš namjeru neformalno</div>
+    <div class="ep"><b>2.</b> AI strukturira, bira ton i poliše jezik</div>
+    <div class="ep"><b>3.</b> Pregledaš, urediš, pošalješ</div>
+  </div>
+</div>
+
+<div class="workspace">
+  <!-- LEFT PANEL -->
+  <div class="input-panel">
+    <div class="panel">
+      <div class="panel-title">✍️ Upiši svoju ideju</div>
+
+      <div class="select-group">
+        <div class="label">Što trebaš napisati?</div>
+        <div class="sublabel">Opišite neformalno — AI će transformirati u profesionalni email</div>
+        <textarea id="rawIntent" placeholder="Npr: Trebam podsjetiti klijenta Horvatić d.o.o. da do petka pošalje potpisani ugovor, jer bez toga ne možemo početi projekt. Ton treba biti ljubazan ali jasan."></textarea>
+      </div>
+
+      <div class="param-grid">
+        <div>
+          <div class="label">Vrsta emaila</div>
+          <select id="emailType">
+            <option value="podsjetnik">Podsjetnik</option>
+            <option value="ponuda">Poslovna ponuda</option>
+            <option value="reklamacija">Reklamacija</option>
+            <option value="zahvala">Zahvalnica</option>
+            <option value="otkazivanje">Otkazivanje</option>
+            <option value="molba">Molba / upit</option>
+            <option value="izvjestaj">Izvještaj</option>
+          </select>
+        </div>
+        <div>
+          <div class="label">Primatelj</div>
+          <select id="recipient">
+            <option value="klijent">Klijent</option>
+            <option value="dobavljac">Dobavljač</option>
+            <option value="nadredjeni">Nadređeni</option>
+            <option value="kolega">Kolega</option>
+            <option value="partner">Poslovni partner</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div class="label">Ton komunikacije</div>
+        <div class="tone-chips">
+          <div class="tone-chip active" data-tone="formalan" onclick="setTone(this)">📋 Formalan</div>
+          <div class="tone-chip" data-tone="profesionalan" onclick="setTone(this)">💼 Profesionalan</div>
+          <div class="tone-chip" data-tone="prijatan" onclick="setTone(this)">😊 Prijatan</div>
+          <div class="tone-chip" data-tone="inzistiranje" onclick="setTone(this)">⚠️ Odlučan</div>
+        </div>
+      </div>
+
+      <div class="param-grid" style="margin-bottom:14px">
+        <div>
+          <div class="label">Duljina</div>
+          <select id="length">
+            <option value="kratki">Kratki (3-5 rečenica)</option>
+            <option value="srednji" selected>Srednji (1-2 paragrafa)</option>
+            <option value="dugi">Dugi (detaljan)</option>
+          </select>
+        </div>
+        <div>
+          <div class="label">Jezik</div>
+          <select id="lang">
+            <option value="hr">Hrvatski</option>
+            <option value="en">Engleski</option>
+            <option value="de">Njemački</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="generate-btn" id="genBtn" onclick="generateEmail()">
+        🤖 Generiraj email
+      </button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">⚡ Gotovi scenariji</div>
+      <div class="scenario-grid">
+        <button class="sc-btn" onclick="loadScenario('podsjetnik')"><span class="sc-icon">📋</span> Podsjetnik za ugovor</button>
+        <button class="sc-btn" onclick="loadScenario('ponuda')"><span class="sc-icon">💼</span> Slanje poslovne ponude</button>
+        <button class="sc-btn" onclick="loadScenario('reklamacija')"><span class="sc-icon">😤</span> Reklamacija dobavljaču</button>
+        <button class="sc-btn" onclick="loadScenario('zahvala')"><span class="sc-icon">🙏</span> Zahvala nakon sastanka</button>
+        <button class="sc-btn" onclick="loadScenario('otkazivanje')"><span class="sc-icon">❌</span> Otkazivanje sastanka</button>
+        <button class="sc-btn" onclick="loadScenario('engleski')"><span class="sc-icon">🇬🇧</span> Business Email (EN)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT OUTPUT -->
+  <div class="output-panel">
+    <div class="output-placeholder" id="placeholder">
+      <span class="big">✉️</span>
+      Upiši svoju namjeru ili odaberi gotov scenarij<br>
+      AI će generirati profesionalni email za tebe<br>
+      <span style="font-size:0.78rem;color:#aaa">Desno ćeš vidjeti gotov email, analizu tona i usporedbu s neformalnim tekstom</span>
+    </div>
+
+    <!-- EMAIL PREVIEW -->
+    <div class="email-preview" id="emailPreview">
+      <div class="email-toolbar">
+        <button class="et-btn send">📤 Pošalji</button>
+        <button class="et-btn" onclick="generateEmail()">🔄 Regeneriraj</button>
+        <button class="et-btn" onclick="copyEmail()">📋 Kopiraj</button>
+        <div class="et-spacer"></div>
+        <div class="version-info" id="versionInfo">v1 · AI Draft</div>
+      </div>
+      <div class="email-meta">
+        <div class="em-row"><span class="em-label">Od:</span><span class="em-value">ana.kovacev@tvrtka.hr</span></div>
+        <div class="em-row"><span class="em-label">Za:</span><span class="em-value" id="emailTo">—</span></div>
+        <div class="em-row"><span class="em-label">Predmet:</span><span class="em-value em-subject" id="emailSubject">—</span></div>
+      </div>
+      <textarea class="email-body" id="emailBody" rows="12"></textarea>
+      <div class="email-footer">
+        <div class="ai-stamp">🤖 AI generiran</div>
+        <span id="emailStats">—</span>
+        <span style="margin-left:auto">Možeš urediti email gore prije slanja</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-row" id="tabRow" style="display:none">
+      <button class="tab-btn active" onclick="showTab('analysis')">📊 Analiza</button>
+      <button class="tab-btn" onclick="showTab('comparison')">🔄 Usporedba</button>
+    </div>
+
+    <!-- ANALYSIS PANEL -->
+    <div class="analysis-panel" id="analysisPanel">
+      <div class="analysis-grid" id="analysisGrid"></div>
+      <div class="tips-box" id="tipsBox"></div>
+    </div>
+
+    <!-- COMPARISON PANEL -->
+    <div class="comparison-panel" id="comparisonPanel">
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-title" style="color:var(--red)">❌ Bez AI (originalni tekst)</div>
+          <div class="comp-text" id="compOriginal">—</div>
+        </div>
+        <div class="comp-card" style="border-left:3px solid var(--green)">
+          <div class="comp-title" style="color:var(--green)">✅ S AI asistentom</div>
+          <div class="comp-text" id="compAI">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SCENARIOS ─────────────────────────────────────────────────────────────────
+const SCENARIOS = {
+  podsjetnik: {
+    intent: 'Trebam podsjetiti klijenta Horvatić d.o.o. da do petka pošalje potpisani ugovor jer bez toga ne možemo početi projekt. Ljubazno ali jasno.',
+    type: 'podsjetnik', recipient: 'klijent', tone: 'formalan', length: 'srednji', lang: 'hr',
+    to: 'goran.horvatic@horvaticdoo.hr',
+    subject: 'Podsjetnik: Potpisani ugovor – rok 30.05.2025.',
+    body: `Poštovani gospodine Horvatić,\n\nObraćam Vam se u svezi potpisivanja ugovora o suradnji koji smo Vam dostavili 20. svibnja 2025.\n\nMolimo Vas da nam, ukoliko je moguće, dostavite potpisani primjerak do petka, 30. svibnja 2025. Nakon primitka dokumentacije, možemo odmah pristupiti realizaciji dogovorenih aktivnosti i pridržati se planiranog vremenskog okvira projekta.\n\nAko imate kakvih pitanja ili komentara vezanih uz sadržaj ugovora, stojimo Vam na raspolaganju.\n\nHvala na suradnji.\n\nS poštovanjem,\nAna Kovačev\nVoditeljica projekata\nTvrtka d.o.o. | +385 91 123 4567`,
+    analysis: { ton: 'Formalan', jasnoča: '9/10', duljina: '168 riječi', profesionalnost: 'Visoka' },
+    tips: ['Naveden jasan rok (30.05.) — AI pretvara "do petka" u konkretan datum', 'Poziv na akciju bez pritiska — ostaje prostora za klijenta', 'Otvorena ponuda pomoći smanjuje frikciju i ubrzava odgovor']
+  },
+  ponuda: {
+    intent: 'Šaljem ponudu Tehu d.o.o. za web dizajn. Cijena 3500 eur, rok 6 tjedana, 3 revizije uključene. Napomeni da smo otvoreni za pregovore.',
+    type: 'ponuda', recipient: 'klijent', tone: 'profesionalan', length: 'srednji', lang: 'hr',
+    to: 'nabava@tehu.hr',
+    subject: 'Poslovna ponuda: Usluge web dizajna – Tehu d.o.o.',
+    body: `Poštovani,\n\nHvala Vam na interesu za naše usluge web dizajna. U nastavku Vam dostavljamo naš prijedlog suradnje.\n\n📋 PONUDA USLUGA\n\n• Izrada web stranice: kompletna izrada prema Vašim specifikacijama\n• Rok isporuke: 6 tjedana od potpisivanja ugovora\n• Revizije: 3 iteracije uključene u cijenu\n• Cijena: 3.500,00 EUR (bez PDV-a)\n\nPonuda uključuje: UX/UI dizajn, responzivno sučelje, optimizaciju za tražilice (SEO) i 30 dana post-launch podrške.\n\nOtvoreni smo za razgovor o uvjetima i prilagodbu paketa Vašim potrebama. Rado bismo dogovorili kratki uvodni razgovor ukoliko imate dodatnih pitanja.\n\nS poštovanjem,\nAna Kovačev\nTvrtka d.o.o.`,
+    analysis: { ton: 'Profesionalan', jasnoča: '10/10', duljina: '142 riječi', profesionalnost: 'Visoka' },
+    tips: ['Strukturirane bullet točke za lakše čitanje — AI dodaje format automatski', 'Otvorenost za pregovore pretvorena u poziv na razgovor', 'Detalji usluge eksplicitno navedeni — manje pitanja od klijenta']
+  },
+  reklamacija: {
+    intent: 'Dobavljač Bešlić d.o.o. nam je dostavio krivi materijal već drugi put. Frustrirani smo, trebamo reklamirati i tražiti zamjenu u roku 5 dana.',
+    type: 'reklamacija', recipient: 'dobavljac', tone: 'inzistiranje', length: 'srednji', lang: 'hr',
+    to: 'reklamacije@beslic-doo.hr',
+    subject: 'Reklamacija – Ponavljajuća greška isporuke | Br. narudžbe 2024-0892',
+    body: `Poštovani,\n\nPišemo Vam u svezi isporuke materijala po narudžbi broj 2024-0892, primljene 25. svibnja 2025.\n\nNažalost, i ovom prigodom primili smo materijal koji ne odgovara naručenim specifikacijama. Ovo je drugi put u kratkom roku da se ista greška ponavlja, što nam uzrokuje značajne operativne probleme i zastoj u produkciji.\n\n⚠️ ZAHTJEV ZA AKCIJU\n\nMolimo Vas da nam u roku od 5 radnih dana dostavite ispravnu robu ili povratnu potvrdu o zamjeni. U suprotnom, bit ćemo primorani razmotriti alternativne dobavljače za buduće narudžbe.\n\nUz ovu poruku dostavljamo fotodokumentaciju zaprimljene robe kao dokaz nesukladnosti.\n\nOčekujemo Vaš hitan odgovor.\n\nS poštovanjem,\nAna Kovačev\nNabava | Tvrtka d.o.o.`,
+    analysis: { ton: 'Odlučan', jasnoča: '10/10', duljina: '155 riječi', profesionalnost: 'Visoka' },
+    tips: ['AI pretvara frustraciju u jasan, dokumentiran zahtjev bez agresivnosti', 'Konkretni rok (5 dana) i posljedice jasno navedeni', 'Napomena o dokumentaciji jača pravnu poziciju kompanije']
+  },
+  zahvala: {
+    intent: 'Bila sam jučer na odličnom sastanku s Marinom Jurić iz tvrtke Digital Hub. Dogovorili smo pilot projekt. Hvala i najavim sljedeći korak.',
+    type: 'zahvala', recipient: 'partner', tone: 'prijatan', length: 'kratki', lang: 'hr',
+    to: 'marina.juric@digitalhub.hr',
+    subject: 'Hvala na sastanku – Sljedeći koraci',
+    body: `Draga Marina,\n\nHvala ti na odvojenom vremenu i konstruktivnom razgovoru koji smo imali jučer!\n\nVeoma me raduje naša dogovorena suradnja i pokretan pilot projekt. Uvjerena sam da ćemo postići sjajne rezultate.\n\nKako smo dogovorili, do utorka ću ti poslati prijedlog plana aktivnosti s vremenskim okvirima. Javi mi slobodno ako ti bude trebalo bilo što u međuvremenu.\n\nVeselim se suradnji! 😊\n\nSrdačan pozdrav,\nAna`,
+    analysis: { ton: 'Prijatan', jasnoča: '9/10', duljina: '84 riječi', profesionalnost: 'Srednja' },
+    tips: ['Topliji, neformalniji ton odabran automatski za partnerski kontekst', 'Konkretni sljedeći korak (prijedlog do utorka) ubrzava projekt', 'Kratkoća je prednost — zahvalnica ne treba biti dugačka']
+  },
+  otkazivanje: {
+    intent: 'Moram otkazati sastanak s g. Petrićem koji je zakazan za sutra u 14h. Isprika i prijedlog novog termina sljedeći tjedan.',
+    type: 'otkazivanje', recipient: 'klijent', tone: 'profesionalan', length: 'kratki', lang: 'hr',
+    to: 'branimir.petric@petric.hr',
+    subject: 'Otkazivanje sastanka – 29.05. | Prijedlog novog termina',
+    body: `Poštovani gospodine Petriću,\n\nIspričavam se što Vam se obraćam u kratkom roku, no moram Vam javiti da sam prisiljena otkazati naš dogovoreni sastanak sutra, 29. svibnja u 14:00 sati, zbog nepredviđenih okolnosti.\n\nKao prijedlog novog termina nudim:\n\n• Utorak, 3. lipnja – 10:00 ili 14:00\n• Srijeda, 4. lipnja – 11:00\n\nMolim Vas da mi javite koji Vam odgovara, ili predložite drukčiji termin koji Vama više odgovara.\n\nSrdačno se ispričavam za neugodnost.\n\nS poštovanjem,\nAna Kovačev`,
+    analysis: { ton: 'Profesionalan', jasnoča: '10/10', duljina: '118 riječi', profesionalnost: 'Visoka' },
+    tips: ['AI nudi konkretne alternative — smanjuje teret na klijentu', 'Isprika je iskrena ali ne pretjerana', 'Strukturirani termini ubrzavaju odgovor i smanjuju email ping-pong']
+  },
+  engleski: {
+    intent: 'Writing to potential partner SmartRetail Inc. about collaboration on AI retail project. Interested in their platform, want to schedule call.',
+    type: 'molba', recipient: 'partner', tone: 'profesionalan', length: 'srednji', lang: 'en',
+    to: 'partnerships@smartretail.inc',
+    subject: 'Partnership Opportunity – AI Retail Collaboration',
+    body: `Dear SmartRetail Team,\n\nI hope this message finds you well. My name is Ana Kovačev, and I represent Tvrtka d.o.o., a digital solutions company based in Croatia with a focus on AI-driven retail innovation.\n\nI recently came across your platform and was impressed by its capabilities in real-time customer behavior analytics. Given our complementary strengths, I believe there could be an exciting opportunity for collaboration on an AI retail project we are currently developing.\n\nI would love to schedule a brief introductory call at your earliest convenience to explore potential synergies. Please feel free to suggest a time that works best for your team.\n\nThank you for your time, and I look forward to connecting.\n\nBest regards,\nAna Kovačev\nBusiness Development | Tvrtka d.o.o.\nana.kovacev@tvrtka.hr`,
+    analysis: { ton: 'Professional', jasnoča: '9/10', duljina: '152 words', profesionalnost: 'High' },
+    tips: ['Formal English business register automatically applied', '"Complementary strengths" framing makes it a partnership, not a pitch', 'CTA is clear without being pushy — respects their time']
+  }
+};
+
+let currentTone = 'formalan';
+let versionCount = 1;
+let currentScenario = null;
+
+function setTone(el) {
+  document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentTone = el.dataset.tone;
+}
+
+function loadScenario(key) {
+  const sc = SCENARIOS[key];
+  if (!sc) return;
+  currentScenario = sc;
+
+  document.getElementById('rawIntent').value = sc.intent;
+  document.getElementById('emailType').value = sc.type;
+  document.getElementById('recipient').value = sc.recipient;
+  document.getElementById('length').value = sc.length;
+  document.getElementById('lang').value = sc.lang;
+
+  document.querySelectorAll('.tone-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.tone === sc.tone);
+  });
+  currentTone = sc.tone;
+
+  generateEmail();
+}
+
+function generateEmail() {
+  const intent = document.getElementById('rawIntent').value.trim();
+  if (!intent && !currentScenario) {
+    alert('Upiši što email treba sadržavati!');
+    return;
+  }
+
+  const btn = document.getElementById('genBtn');
+  btn.classList.add('loading');
+  btn.textContent = '⏳ AI generira...';
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    btn.innerHTML = '🤖 Generiraj email';
+
+    if (currentScenario && SCENARIOS[currentScenario.type === document.getElementById('emailType').value ? Object.keys(SCENARIOS).find(k => SCENARIOS[k] === currentScenario) : null]) {
+      // use scenario
+    }
+
+    const sc = currentScenario || generateGeneric();
+    displayEmail(sc);
+    currentScenario = null;
+    versionCount++;
+  }, 1200 + Math.random() * 600);
+}
+
+function generateGeneric() {
+  const type = document.getElementById('emailType').value;
+  const recipient = document.getElementById('recipient').value;
+  const intent = document.getElementById('rawIntent').value;
+
+  return {
+    to: `kontakt@primatelj.hr`,
+    subject: `Predmet: ${intent.split(' ').slice(0,5).join(' ')}...`,
+    body: `Poštovani,\n\nObraćam Vam se u svezi: ${intent}\n\nS poštovanjem,\nAna Kovačev`,
+    analysis: { ton: currentTone, jasnoča: '8/10', duljina: '~80 riječi', profesionalnost: 'Visoka' },
+    tips: ['AI transformira neformalni opis u poslovni email', 'Ton prilagođen odabranoj postavci', 'Email spreman za slanje ili uređivanje']
+  };
+}
+
+function displayEmail(sc) {
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('emailPreview').style.display = 'block';
+  document.getElementById('tabRow').style.display = 'flex';
+
+  document.getElementById('emailTo').textContent = sc.to;
+  document.getElementById('emailSubject').textContent = sc.subject;
+  document.getElementById('emailBody').value = sc.body;
+  document.getElementById('versionInfo').textContent = `v${versionCount} · AI Draft`;
+
+  const wordCount = sc.body.split(/\s+/).length;
+  document.getElementById('emailStats').textContent = `${wordCount} riječi · ${Math.ceil(wordCount/200)} min čitanja`;
+
+  // Analysis
+  document.getElementById('analysisGrid').innerHTML = `
+    <div class="an-card"><span class="an-emoji">🎭</span><div class="an-label">Ton</div><div class="an-value">${sc.analysis.ton}</div></div>
+    <div class="an-card"><span class="an-emoji">🎯</span><div class="an-label">Jasnoća</div><div class="an-value" style="color:var(--green)">${sc.analysis.jasnoča}</div></div>
+    <div class="an-card"><span class="an-emoji">📏</span><div class="an-label">Duljina</div><div class="an-value">${sc.analysis.duljina}</div></div>
+    <div class="an-card"><span class="an-emoji">💼</span><div class="an-label">Razina</div><div class="an-value">${sc.analysis.profesionalnost}</div></div>
+  `;
+
+  document.getElementById('tipsBox').innerHTML = `
+    <div class="tips-title">🤖 Što je AI napravio za tebe</div>
+    ${(sc.tips || []).map(t => `<div class="tip-row"><span>✅</span><span>${t}</span></div>`).join('')}
+  `;
+
+  // Comparison
+  document.getElementById('compOriginal').textContent = document.getElementById('rawIntent').value;
+  document.getElementById('compAI').textContent = sc.body.slice(0, 300) + (sc.body.length > 300 ? '...' : '');
+
+  showTab('analysis');
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && tab==='analysis') || (i===1 && tab==='comparison'));
+  });
+  document.getElementById('analysisPanel').style.display = tab === 'analysis' ? 'block' : 'none';
+  document.getElementById('comparisonPanel').style.display = tab === 'comparison' ? 'grid' : 'none';
+}
+
+function copyEmail() {
+  const body = document.getElementById('emailBody').value;
+  const subject = document.getElementById('emailSubject').textContent;
+  navigator.clipboard.writeText(`Predmet: ${subject}\n\n${body}`).then(() => {
+    alert('Email kopiran u međuspremnik!');
+  });
+}
+
+// Init with first scenario
+window.onload = () => loadScenario('podsjetnik');
+</script>
+</body>
+</html>
