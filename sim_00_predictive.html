@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Predikcija – Simulacija</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Space+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --border: #e0e0e0;
+            --accent: #173E7E;
+            --accent-light: #5B8FCE;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --prediction-user: #f9f9f9;
+            --prediction-ai: #e8f4ff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f26 100%);
+            border-bottom: 2px solid var(--accent);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            letter-spacing: -1px;
+        }
+
+        .logo span { color: var(--accent-light); }
+
+        .header-info {
+            flex: 1;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .header-info strong { color: var(--text); }
+
+        /* EXPLAINER BANNER */
+        .explainer {
+            background: linear-gradient(135deg, rgba(23, 62, 126, 0.1) 0%, rgba(91, 143, 206, 0.1) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .explainer strong { color: var(--accent-light); }
+
+        /* MAIN CONTENT */
+        .main {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+        }
+
+        /* CONTAINER */
+        .support-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            gap: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FORM GROUP */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-indicator {
+            font-size: 0.75rem;
+            text-transform: none;
+            letter-spacing: 0;
+            color: #999;
+            font-weight: 400;
+            padding: 4px 8px;
+            background: rgba(91, 143, 206, 0.1);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .ai-indicator.active {
+            color: var(--accent-light);
+            background: rgba(91, 143, 206, 0.2);
+            border-color: var(--accent-light);
+            box-shadow: 0 0 8px rgba(91, 143, 206, 0.3);
+        }
+
+        /* INPUT BOXES */
+        .input-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* TEXTAREA BOX (Text input simulation) */
+        .textarea-box {
+            background: var(--prediction-user);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            min-height: 80px;
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #typed-text {
+            color: var(--text);
+            font-weight: 500;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #ghost-text {
+            color: var(--text-muted);
+            opacity: 0.6;
+            font-weight: 400;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--accent-light);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 49% { background: var(--accent-light); }
+            50%, 100% { background: transparent; }
+        }
+
+        /* HINT BAR */
+        .hint-bar {
+            background: rgba(91, 143, 206, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        #status-message {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        kbd {
+            background: var(--prediction-user);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-light);
+        }
+
+        #tab-instruction {
+            color: var(--accent-light);
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .main {
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .support-container {
+                padding: 14px;
+            }
+
+            .label {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .ai-indicator {
+                margin-top: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">AI <span>Predikcija</span></div>
+        <div class="header-info">
+            <strong>Kako AI predviđa što ćeš pisati?</strong><br>
+            Simulacija prediktivnog unosa u aplikaciji za rezervaciju
+        </div>
+    </div>
+
+    <div class="explainer">
+        <strong>Što se događa:</strong> Dok tipkaš, AI predviđa sljedeće riječi na temelju konteksta. To je isti mehanizam koji koristi ChatGPT, Google Search, ali i autocomplete na tvom telefonu.
+    </div>
+
+    <div class="main">
+        <div class="support-container">
+            <div class="form-group">
+                <span class="label">Tip rezervacije</span>
+                <div class="input-box">Promjena datuma putovanja ▼</div>
+            </div>
+
+            <div class="form-group">
+                <span class="label">Broj putne karte</span>
+                <div class="input-box">ZG-2024-847392-01</div>
+            </div>
+
+            <div class="form-group">
+                <span class="label">Ime putnika</span>
+                <div class="input-box">Marko Horvat</div>
+            </div>
+
+            <div class="form-group">
+                <span class="label">
+                    Opis problema
+                    <div id="ai-status" class="ai-indicator">
+                        ⏳ Čekam unos...
+                    </div>
+                </span>
+                <div class="textarea-box">
+                    <span id="typed-text"></span><span id="ghost-text"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hint-bar">
+            <span id="status-message">Simulacija tipkanja započeta...</span><br>
+            <span id="tab-instruction" style="visibility: hidden;">Pritisni <kbd>TAB</kbd> za prihvaćanje AI predikcije</span>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            userInput: "Trebam promijeniti avionsku kartu rezerviranu za 15. lipnja, trebam brzu ",
+            aiPrediction: "promjenu leta do kraja dana jer mi se promijenio termin hitnog poslovnog sastanka u Frankfurtu."
+        };
+
+        let charIndex = 0;
+        const typedEl = document.getElementById('typed-text');
+        const ghostEl = document.getElementById('ghost-text');
+        const aiStatus = document.getElementById('ai-status');
+        const statusMsg = document.getElementById('status-message');
+        const tabInstr = document.getElementById('tab-instruction');
+
+        function typeChar() {
+            if (charIndex < data.userInput.length) {
+                typedEl.innerText += data.userInput[charIndex];
+                charIndex++;
+
+                // Simulacija slučajnog predviđanja nakon određenih ključnih riječi
+                const typed = data.userInput.substring(0, charIndex);
+                if (typed.length > 15) {
+                    ghostEl.innerText = data.aiPrediction;
+                    aiStatus.classList.add('active');
+                    aiStatus.innerText = '✨ AI Predikcija dostupna';
+                }
+
+                setTimeout(typeChar, 50 + Math.random() * 60);
+            } else {
+                statusMsg.innerText = "AI je prepoznao kontekst — spremna je predikcija!";
+                tabInstr.style.visibility = "visible";
+                window.addEventListener('keydown', handleTab);
+            }
+        }
+
+        function handleTab(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                typedEl.innerText += data.aiPrediction;
+                ghostEl.innerText = "";
+                aiStatus.classList.remove('active');
+                aiStatus.innerText = '✅ Unos dovršen';
+                tabInstr.style.visibility = "hidden";
+                statusMsg.innerText = "Poruka je poslana sustavu za obrada.";
+                window.removeEventListener('keydown', handleTab);
+            }
+        }
+
+        // Pokretanje simulacije 1 sekunda nakon što se stranica učita
+        window.addEventListener('load', () => {
+            setTimeout(typeChar, 1000);
+        });
+
+        // Ako je prikazano kao iframe unutar Reveal.js, koristi sljedeće:
+        if (window.parent && window.parent.Reveal) {
+            window.parent.Reveal.on('slidechanged', event => {
+                const slides = document.querySelectorAll('section');
+                if (slides.length > 0) {
+                    typedEl.innerText = "";
+                    ghostEl.innerText = "";
+                    charIndex = 0;
+                    aiStatus.classList.remove('active');
+                    aiStatus.innerText = '⏳ Čekam unos...';
+                    tabInstr.style.visibility = "hidden";
+                    statusMsg.innerText = "Simulacija tipkanja započeta...";
+                    setTimeout(typeChar, 1000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
